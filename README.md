@@ -18,14 +18,14 @@ regexp.MustCompile(`^[a-z]+\[[0-9]+\]$`)
 
 // Using this builder.
 rex.New(
-    rex.Chars.Begin(),
+    rex.Chars.Begin(), // `^`
     // ID should begin with lowercased character.
-    rex.Chars.Range('a', 'z').OneOrMore(),
+    rex.Chars.Range('a', 'z').OneOrMore(), // `[a-z]+`
     // ID should contain number inside brackets [#].
-    rex.Chars.Single('['),
-    rex.Chars.Digits().OneOrMore(),
-    rex.Chars.Single(']'),
-    rex.Chars.End(),
+    rex.Chars.Single('['), // `[`
+    rex.Chars.Digits().OneOrMore(), // `[0-9]+`
+    rex.Chars.Single(']'), // `]`
+    rex.Chars.End(), // `$`
 ).MustCompile()
 ```
 
@@ -46,27 +46,27 @@ func main() {
 
 ### Common
 
-Common operators.
+Common operators for core operations.
 
 ```golang
-Raw(raw string) // Raw regular expression.
-Text(text string) // Escaped text.
-Class(tokens ...dialect.Token) // Include specified characters.
-NotClass(tokens ...dialect.Token) // Exclude specified characters.
-Single(r rune) // Single character.
+rex.Common.Raw(raw string) // Raw regular expression.
+rex.Common.Text(text string) // Escaped text.
+rex.Common.Class(tokens ...dialect.Token) // Include specified characters.
+rex.Common.NotClass(tokens ...dialect.Token) // Exclude specified characters.
+rex.Common.Single(r rune) // Single character.
 ```
 
 ### Character classes
 
-Single characters and classes. They can be used as-is, as well as a child to `Class` or `NotClass`.
+Single characters and classes. They can be used as-is, as well as childs to `rex.CommonClass` or `rex.CommonNotClass`.
 
 ```golang
-rex.Chars.Digits() // [0-9]
-rex.Chars.Begin() // ^
-rex.Chars.End() // $
-rex.Chars.Any() // .
-rex.Chars.Range(from rune, to rune)  // [a-z]
-rex.Chars.Single(r rune) // r
+rex.Chars.Digits() // `[0-9]`
+rex.Chars.Begin() // `^`
+rex.Chars.End() // `$`
+rex.Chars.Any() // `.`
+rex.Chars.Range(from rune, to rune)  // `[a-z]`
+rex.Chars.Single(r rune) // `r`
 ```
 
 If you want to combine mutiple character classes, use `rex.Common.Class`:
@@ -80,25 +80,17 @@ rex.Common.NotClass(rex.Chars.Digits(), rex.Chars.Single('a'))
 // It will produce `[^0-9a]`.
 ```
 
-### Character classes
-
-```golang
-rex.Chars.Digits() // [0-9]
-rex.Chars.Begin() // ^
-rex.Chars.End() // $
-rex.Chars.Any() // .
-rex.Chars.Range(from rune, to rune)  // [a-z]
-rex.Chars.Single(r rune) // r
-```
 
 ### Repetitions
 
+Helpers that specify how to repeat characters. They can be called on character tokens.
+
 ```golang
-ClassToken.OneOrMore() // +
-ClassToken.ZeroOrMore() // *
-ClassToken.ZeroOrOne() // ?
-ClassToken.EqualOrMoreThan(n int) // {n,}
-ClassToken.Between(n, m int) // {n,m}
+ClassToken.OneOrMore() // `+`
+ClassToken.ZeroOrMore() // `*`
+ClassToken.ZeroOrOne() // `?`
+ClassToken.EqualOrMoreThan(n int) // `{n,}`
+ClassToken.Between(n, m int) // `{n,m}`
 ```
 
 
@@ -185,3 +177,7 @@ rex.New(
     // It will match exactly the same text.
 ).MustCompile()
 ```
+
+#### More examples
+
+More examples can be found here: [pkg/rex/examples_test.go](pkg/rex/examples_test.go).

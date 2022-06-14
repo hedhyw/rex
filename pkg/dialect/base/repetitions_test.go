@@ -36,5 +36,13 @@ func TestRexClassRepetitions(t *testing.T) {
 		Name:     "ZeroOrOne",
 		Chain:    []dialect.Token{getABClass().ZeroOrOne()},
 		Expected: `[ab]?`,
+	}, {
+		Name:     "AnyOneOrMore",
+		Chain:    []dialect.Token{base.Chars.Any().OneOrMore()},
+		Expected: `.+`,
+	}, {
+		Name:     "RangeOneOrMore",
+		Chain:    []dialect.Token{base.Chars.Range('0', '9').OneOrMore()},
+		Expected: `[0-9]+`,
 	}}.Run(t)
 }

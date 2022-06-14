@@ -15,37 +15,62 @@ type charsBaseDialect dialect.Dialect
 // Chars contains character class elements.
 const Chars charsBaseDialect = "charsBaseDialect"
 
-// Digits is an alias to [0-9].
-func (charsBaseDialect) Digits() dialect.Token {
-	return helper.StringToken(`\d`)
+// Digits is an alias to [0-9]. ASCII.
+//
+// Regex: `\d`.
+func (charsBaseDialect) Digits() ClassToken {
+	return newClassToken(helper.StringToken(`\d`)).withoutBrackets()
 }
 
 // Begin of text by default or line if the flag EnableMultiline is set.
-func (charsBaseDialect) Begin() dialect.Token {
-	return helper.ByteToken('^')
+//
+// Regex: `^`.
+func (charsBaseDialect) Begin() ClassToken {
+	return newClassToken(helper.ByteToken('^')).withoutBrackets()
 }
 
 // End of text or line if the flag EnableMultiline is set.
-func (charsBaseDialect) End() dialect.Token {
-	return helper.ByteToken('$')
+//
+// Regex: `$`.
+func (charsBaseDialect) End() ClassToken {
+	return newClassToken(helper.ByteToken('$')).withoutBrackets()
 }
 
 // Any character, possibly including newline if the flag AnyIncludeNewLine() is set.
-func (charsBaseDialect) Any() dialect.Token {
-	return helper.ByteToken('.')
+//
+// Regex: `.`.
+func (charsBaseDialect) Any() ClassToken {
+	return newClassToken(helper.ByteToken('.')).withoutBrackets()
+}
+
+// Range of characters.
+// The input is not validated.
+//
+// Regex: `[a-z]`.
+func (charsBaseDialect) Range(from rune, to rune) ClassToken {
+	return newClassToken(helper.StringToken("%c-%c", from, to))
 }
 
 // Single character. It supports not ascii characters.
-func (charsBaseDialect) Single(r rune) dialect.Token {
+// The input is not validated.
+//
+// Regex: `r`, `\\xHEX_CODE`, or  `\\x{HEX_CODE}`.
+func (charsBaseDialect) Single(r rune) ClassToken {
 	if r < unicode.MaxASCII {
-		return helper.StringToken(regexp.QuoteMeta(string([]rune{r})))
+		return newClassToken(
+			helper.StringToken(regexp.QuoteMeta(string(r))),
+		).withoutBrackets()
 	}
 
 	hexValue := strings.ToUpper(strconv.FormatInt(int64(r), 16))
 
 	if len(hexValue) == 2 {
-		return helper.StringToken("\\x" + hexValue)
+		return newClassToken(
+			helper.StringToken("\\x" + hexValue),
+		).withoutBrackets()
 	}
 
-	return helper.StringToken("\\x{%s}", hexValue)
+	return newClassToken(
+		helper.StringToken("\\x{%s}", hexValue),
+	).withoutBrackets()
 }

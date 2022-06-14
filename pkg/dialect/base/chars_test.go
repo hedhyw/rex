@@ -42,5 +42,13 @@ func TestRexChars(t *testing.T) {
 		Name:     "single_hex_small",
 		Chain:    []dialect.Token{base.Chars.Single(unicode.MaxASCII + 1)},
 		Expected: `\x80`,
+	}, {
+		Name:     "range_upper",
+		Chain:    []dialect.Token{base.Chars.Range('A', 'Z')},
+		Expected: `[A-Z]`,
+	}, {
+		Name:     "range_digits",
+		Chain:    []dialect.Token{base.Chars.Range('0', '9')},
+		Expected: `[0-9]`,
 	}}.Run(t)
 }

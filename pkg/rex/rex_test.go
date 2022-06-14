@@ -15,6 +15,52 @@ func TestRexGeneral(t *testing.T) {
 			rex.Common.Text("hello world"),
 		},
 		Expected: `hello world`,
+	}, {
+		Name: "readme_example",
+		Chain: []dialect.Token{
+			rex.Chars.Begin(),
+			// ID should begin with lowercased character.
+			rex.Chars.Range('a', 'z').OneOrMore(),
+			// ID should contain number inside brackets [#].
+			rex.Chars.Single('['),
+			rex.Chars.Digits().OneOrMore(),
+			rex.Chars.Single(']'),
+			rex.Chars.End(),
+		},
+		Expected: `^[a-z]+\[\d+\]$`,
+	}, {
+		Name: "readme_example",
+		Chain: []dialect.Token{
+			rex.Chars.Begin(),
+
+			rex.Common.Class(
+				rex.Chars.Range('a', 'z'),
+				rex.Chars.Range('A', 'Z'),
+				rex.Chars.Digits(),
+			).OneOrMore(),
+
+			// Email delimeter.
+			rex.Chars.Single('@'),
+
+			// Domain part.
+			rex.Common.Class(
+				rex.Chars.Range('a', 'z'),
+				rex.Chars.Range('A', 'Z'),
+				rex.Chars.Digits(),
+			).OneOrMore(),
+
+			// Should contain at least one dot.
+			rex.Chars.Single('.'),
+
+			rex.Common.Class(
+				rex.Chars.Range('a', 'z'),
+				rex.Chars.Range('A', 'Z'),
+				rex.Chars.Digits(),
+			).Between(2, 3),
+
+			rex.Chars.End(),
+		},
+		Expected: `^[a-zA-Z\d]+@[a-zA-Z\d]+\.[a-zA-Z\d]{2,3}$`,
 	}}.Run(t)
 }
 

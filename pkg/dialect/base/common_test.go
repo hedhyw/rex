@@ -14,6 +14,10 @@ func TestRexCommon(t *testing.T) {
 		Chain:    []dialect.Token{base.Common.Class(base.Chars.Any())},
 		Expected: `[.]`,
 	}, {
+		Name:     "NotClass_Any",
+		Chain:    []dialect.Token{base.Common.NotClass(base.Chars.Any())},
+		Expected: `[^.]`,
+	}, {
 		Name:     "Single_Any",
 		Chain:    []dialect.Token{base.Common.Single('.')},
 		Expected: `\.`,

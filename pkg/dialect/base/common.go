@@ -24,18 +24,16 @@ func (commonBaseDialect) Text(text string) dialect.Token {
 
 // Class specifies the class of characters.
 func (commonBaseDialect) Class(tokens ...dialect.Token) ClassToken {
-	return ClassToken{
-		classTokens: tokens,
-		repetition:  "",
-		brackets:    true,
-	}
+	return newClassToken(tokens...)
+}
+
+// NotClass specifies the class of characters that should be excluded.
+func (commonBaseDialect) NotClass(tokens ...dialect.Token) ClassToken {
+	return newClassToken(tokens...).withExclude()
 }
 
 // Single specifies the class of a single character.
+// It is a synonym to `Chars.Single``.
 func (commonBaseDialect) Single(r rune) ClassToken {
-	return ClassToken{
-		classTokens: []dialect.Token{Chars.Single(r)},
-		repetition:  "",
-		brackets:    false,
-	}
+	return Chars.Single(r)
 }

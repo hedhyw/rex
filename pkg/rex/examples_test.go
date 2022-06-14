@@ -15,10 +15,12 @@ func Example_basicMethods() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	_ = re
 
 	// Use MustCompile if you don't speicfy dynamic arguments.
 	re = rexRe.MustCompile()
+	_ = re
 
 	// We can get constructed regular expression.
 	fmt.Println(rexRe.String())

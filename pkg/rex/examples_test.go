@@ -10,22 +10,23 @@ import (
 func Example_basicMethods() {
 	rexRe := rex.New(rex.Chars.Any().ZeroOrMore())
 
-	// Use Compile if you speicfy dynamic arguments.
+	// Use Compile if you spcify dynamic arguments.
 	re, err := rexRe.Compile()
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	_ = re
+	fmt.Println(`re.MatchString("a"):`, re.MatchString("a"))
 
 	// Use MustCompile if you don't speicfy dynamic arguments.
 	re = rexRe.MustCompile()
-	_ = re
+	fmt.Println(`re.MatchString("a"):`, re.MatchString("a"))
 
 	// We can get constructed regular expression.
-	fmt.Println(rexRe.String())
+	fmt.Println(`rexRe.String():`, rexRe.String())
 	// Output:
-	// .*
+	// re.MatchString("a"): true
+	// re.MatchString("a"): true
+	// rexRe.String(): .*
 }
 
 func Example_basicUsage() {

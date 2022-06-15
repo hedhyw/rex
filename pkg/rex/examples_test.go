@@ -15,6 +15,7 @@ func Example_basicMethods() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	fmt.Println(`re.MatchString("a"):`, re.MatchString("a"))
 
 	// Use MustCompile if you don't speicfy dynamic arguments.

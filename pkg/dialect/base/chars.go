@@ -10,36 +10,40 @@ import (
 	"github.com/hedhyw/rex/pkg/dialect"
 )
 
-type charsBaseDialect dialect.Dialect
+// CharsBaseDialect is a namespace that contains common character
+// classes tokens.
+//
+// Use the alias `rex.Chars`.
+type CharsBaseDialect dialect.Dialect
 
 // Chars contains character class elements.
-const Chars charsBaseDialect = "charsBaseDialect"
+const Chars CharsBaseDialect = "CharsBaseDialect"
 
 // Digits is an alias to [0-9]. ASCII.
 //
 // Regex: `\d`.
-func (charsBaseDialect) Digits() ClassToken {
+func (CharsBaseDialect) Digits() ClassToken {
 	return newClassToken(helper.StringToken(`\d`)).withoutBrackets()
 }
 
 // Begin of text by default or line if the flag EnableMultiline is set.
 //
 // Regex: `^`.
-func (charsBaseDialect) Begin() ClassToken {
+func (CharsBaseDialect) Begin() ClassToken {
 	return newClassToken(helper.ByteToken('^')).withoutBrackets()
 }
 
 // End of text or line if the flag EnableMultiline is set.
 //
 // Regex: `$`.
-func (charsBaseDialect) End() ClassToken {
+func (CharsBaseDialect) End() ClassToken {
 	return newClassToken(helper.ByteToken('$')).withoutBrackets()
 }
 
 // Any character, possibly including newline if the flag AnyIncludeNewLine() is set.
 //
 // Regex: `.`.
-func (charsBaseDialect) Any() ClassToken {
+func (CharsBaseDialect) Any() ClassToken {
 	return newClassToken(helper.ByteToken('.')).withoutBrackets()
 }
 
@@ -47,7 +51,7 @@ func (charsBaseDialect) Any() ClassToken {
 // The input is not validated.
 //
 // Regex: `[a-z]`.
-func (charsBaseDialect) Range(from rune, to rune) ClassToken {
+func (CharsBaseDialect) Range(from rune, to rune) ClassToken {
 	return newClassToken(helper.StringToken("%c-%c", from, to))
 }
 
@@ -55,7 +59,7 @@ func (charsBaseDialect) Range(from rune, to rune) ClassToken {
 // The input is not validated.
 //
 // Regex: `r`, `\\xHEX_CODE`, or  `\\x{HEX_CODE}`.
-func (charsBaseDialect) Single(r rune) ClassToken {
+func (CharsBaseDialect) Single(r rune) ClassToken {
 	if r < unicode.MaxASCII {
 		return newClassToken(
 			helper.StringToken(regexp.QuoteMeta(string(r))),

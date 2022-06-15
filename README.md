@@ -5,6 +5,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/hedhyw/rex/badge.svg?branch=main)](https://coveralls.io/github/hedhyw/rex?branch=main)
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/hedhyw/rex)](https://pkg.go.dev/github.com/hedhyw/rex?tab=doc)
 
+![rex-gopher](_docs/gopher.png)
+
 This is a regular expressions builder for humans!
 
 ## Why?
@@ -13,7 +15,7 @@ It improves readability and helps to construct regular expressions using human-f
 
 Let's see an example:
 ```golang
-// Using reg expression string.
+// Using regular expression string.
 regexp.MustCompile(`^[a-z]+\[[0-9]+\]$`)
 
 // Using this builder.
@@ -58,7 +60,7 @@ rex.Common.Single(r rune) // Single character.
 
 ### Character classes
 
-Single characters and classes. They can be used as-is, as well as childs to `rex.CommonClass` or `rex.CommonNotClass`.
+Single characters and classes, that can be used as-is, as well as childs to `rex.CommonClass` or `rex.CommonNotClass`.
 
 ```golang
 rex.Chars.Digits() // `[0-9]`

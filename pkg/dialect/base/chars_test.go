@@ -59,8 +59,12 @@ func TestRexChars(t *testing.T) {
 		Chain:    []dialect.Token{base.Chars.Unicode(unicode.Cc)},
 		Expected: `\p{Cc}`,
 	}, {
-		Name:     "unicode_invalid",
-		Chain:    []dialect.Token{base.Chars.Unicode(&unicode.RangeTable{})},
+		Name: "unicode_invalid",
+		Chain: []dialect.Token{base.Chars.Unicode(&unicode.RangeTable{
+			R16:         nil,
+			R32:         nil,
+			LatinOffset: 0,
+		})},
 		Expected: ``,
 	}}.Run(t)
 }

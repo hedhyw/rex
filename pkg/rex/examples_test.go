@@ -54,12 +54,12 @@ func Example_emailRange() {
 		rex.Chars.Range('a', 'z'),
 		rex.Chars.Range('A', 'Z'),
 		rex.Chars.Digits(),
-	).OneOrMore()
+	).OneOrMore() // `[a-zA-Z0-9]`
 
 	re := rex.New(
 		rex.Chars.Begin(), // `^`
 
-		alphaNum, // `[a-zA-Z0-9]`
+		alphaNum,
 		// Email delimeter.
 		rex.Chars.Single('@'), // `@`
 

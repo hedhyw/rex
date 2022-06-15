@@ -113,27 +113,27 @@ If we describe an email as `(alphanum)@(alphanum).(2-3 characters)`, then we can
 
     ```golang
     alphaNum := rex.Common.Class(
-		rex.Chars.Range('a', 'z'),
-		rex.Chars.Range('A', 'Z'),
-		rex.Chars.Digits(),
-	).OneOrMore()
+        rex.Chars.Range('a', 'z'),
+        rex.Chars.Range('A', 'Z'),
+        rex.Chars.Digits(),
+    ).OneOrMore() // `[a-zA-Z0-9]`
 
-	re := rex.New(
-		rex.Chars.Begin(), // `^`
+    re := rex.New(
+        rex.Chars.Begin(), // `^`
 
-		alphaNum, // `[a-zA-Z0-9]`
-		// Email delimeter.
-		rex.Chars.Single('@'), // `@`
+        alphaNum, 
+        // Email delimeter.
+        rex.Chars.Single('@'), // `@`
 
-		// Domain part.
-		alphaNum,
+        // Domain part.
+        alphaNum,
 
-		// Should contain at least one dot.
-		rex.Chars.Single('.'), // `\`
-		alphaNum.Between(2, 3),
+        // Should contain at least one dot.
+        rex.Chars.Single('.'), // `\`
+        alphaNum.Between(2, 3),
 
-		rex.Chars.End(), // `$`
-	).MustCompile()
+        rex.Chars.End(), // `$`
+    ).MustCompile()
     ```
 
 3. using predefined helper:

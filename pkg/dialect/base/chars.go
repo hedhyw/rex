@@ -79,8 +79,9 @@ func (CharsBaseDialect) Single(r rune) ClassToken {
 	).withoutBrackets()
 }
 
-// Unicode class. It supports only unicode.* range tables that are defined
-// in `unicode.Categories` or `unicode.Scripts`. The input is not validated.
+// Unicode class. It supports *unicode.RangeTable that is defined
+// in `unicode.Categories` or `unicode.Scripts`.
+// The input is not validated.
 //
 // Example usage:
 //
@@ -105,7 +106,8 @@ func (d CharsBaseDialect) Unicode(table *unicode.RangeTable) ClassToken {
 
 // UnicodeByName class. It is alternative to Chars.Unicode, but accepts
 // name of the RangeTable. Unicode character classes are those in
-// unicode.Categories and unicode.Scripts. The input is not validated.
+// unicode.Categories and unicode.Scripts.
+// The input is not validated.
 //
 // Example usage:
 //

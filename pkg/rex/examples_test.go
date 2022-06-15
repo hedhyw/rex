@@ -50,33 +50,25 @@ func Example_basicUsage() {
 }
 
 func Example_emailRange() {
+	alphaNum := rex.Common.Class(
+		rex.Chars.Range('a', 'z'),
+		rex.Chars.Range('A', 'Z'),
+		rex.Chars.Digits(),
+	).OneOrMore()
+
 	re := rex.New(
 		rex.Chars.Begin(), // `^`
 
-		rex.Common.Class( // `[a-zA-Z0-9]`
-			rex.Chars.Range('a', 'z'),
-			rex.Chars.Range('A', 'Z'),
-			rex.Chars.Digits(),
-		).OneOrMore(),
-
+		alphaNum, // `[a-zA-Z0-9]`
 		// Email delimeter.
 		rex.Chars.Single('@'), // `@`
 
 		// Domain part.
-		rex.Common.Class(
-			rex.Chars.Range('a', 'z'),
-			rex.Chars.Range('A', 'Z'),
-			rex.Chars.Digits(),
-		).OneOrMore(),
+		alphaNum,
 
 		// Should contain at least one dot.
 		rex.Chars.Single('.'), // `\`
-
-		rex.Common.Class(
-			rex.Chars.Range('a', 'z'),
-			rex.Chars.Range('A', 'Z'),
-			rex.Chars.Digits(),
-		).Between(2, 3),
+		alphaNum.Between(2, 3),
 
 		rex.Chars.End(), // `$`
 	).MustCompile()

@@ -11,7 +11,7 @@ This is a regular expressions builder for humans!
 
 ## Why?
 
-It improves readability and helps to construct regular expressions using human-friendly constructions. Also, it allows commenting blocks, which improves the quality of the code.
+It improves readability and helps to construct regular expressions using human-friendly constructions. Also, it allows commenting and reusing blocks, which improves the quality of the code.
 
 Let's see an example:
 ```golang
@@ -112,36 +112,28 @@ If we describe an email as `(alphanum)@(alphanum).(2-3 characters)`, then we can
 2. using character ranges:
 
     ```golang
-    rex.New(
-        rex.Chars.Begin(), // `^`
+    alphaNum := rex.Common.Class(
+		rex.Chars.Range('a', 'z'),
+		rex.Chars.Range('A', 'Z'),
+		rex.Chars.Digits(),
+	).OneOrMore()
 
-        rex.Common.Class( // `[a-zA-Z0-9]`
-            rex.Chars.Range('a', 'z'),
-            rex.Chars.Range('A', 'Z'),
-            rex.Chars.Digits(),
-        ).OneOrMore(),
+	re := rex.New(
+		rex.Chars.Begin(), // `^`
 
-        // Email delimeter.
-        rex.Chars.Single('@'), // `@`
+		alphaNum, // `[a-zA-Z0-9]`
+		// Email delimeter.
+		rex.Chars.Single('@'), // `@`
 
-        // Domain part.
-        rex.Common.Class(
-            rex.Chars.Range('a', 'z'),
-            rex.Chars.Range('A', 'Z'),
-            rex.Chars.Digits(),
-        ).OneOrMore(),
+		// Domain part.
+		alphaNum,
 
-        // Should contain at least one dot.
-        rex.Chars.Single('.'), // `\`
+		// Should contain at least one dot.
+		rex.Chars.Single('.'), // `\`
+		alphaNum.Between(2, 3),
 
-        rex.Common.Class(
-            rex.Chars.Range('a', 'z'),
-            rex.Chars.Range('A', 'Z'),
-            rex.Chars.Digits(),
-        ).Between(2, 3),
-
-        rex.Chars.End(), // `$`
-    ).MustCompile()
+		rex.Chars.End(), // `$`
+	).MustCompile()
     ```
 
 3. using predefined helper:

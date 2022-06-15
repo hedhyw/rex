@@ -22,7 +22,7 @@ func newClassToken(classTokens ...dialect.Token) ClassToken {
 	}
 }
 
-// WithoutBrackets implements dialect.ClassToken.
+// Unwrap implements dialect.ClassToken.
 func (ct ClassToken) Unwrap() dialect.ClassToken {
 	return ct.withoutBrackets()
 }

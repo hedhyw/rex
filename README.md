@@ -7,7 +7,7 @@
 
 ![rex-gopher](_docs/gopher.png)
 
-This is a regular expressions builder for humans!
+This is a regular expressions builder for gophers!
 
 ## Why?
 

@@ -46,6 +46,10 @@ func TestRexChars_base(t *testing.T) {
 		Name:     "range_upper",
 		Chain:    []dialect.Token{base.Chars.Range('A', 'Z')},
 		Expected: `[A-Z]`,
+	}, {
+		Name:     "range_digits",
+		Chain:    []dialect.Token{base.Chars.Range('0', '9')},
+		Expected: `[0-9]`,
 	}}.Run(t)
 }
 

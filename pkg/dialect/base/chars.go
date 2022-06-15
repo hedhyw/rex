@@ -78,3 +78,27 @@ func (CharsBaseDialect) Single(r rune) ClassToken {
 		helper.StringToken("\\x{%s}", hexValue),
 	).withoutBrackets()
 }
+
+// Unicode class. It supports only unicode.* range tables that are defined
+// in `unicode.Categories` or `unicode.Scripts`. The input is not validated.
+//
+// Example usage:
+//
+//   Chars.Unicode(unicode.Greek)
+//
+// Regex: `\p{Greek}`.
+func (CharsBaseDialect) Unicode(table *unicode.RangeTable) ClassToken {
+	for name, t := range unicode.Categories {
+		if table == t {
+			return newClassToken(helper.StringToken(`\p{%s}`, name)).withoutBrackets()
+		}
+	}
+
+	for name, t := range unicode.Scripts {
+		if table == t {
+			return newClassToken(helper.StringToken(`\p{%s}`, name)).withoutBrackets()
+		}
+	}
+
+	return newClassToken(helper.StringToken("")).withoutBrackets()
+}

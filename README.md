@@ -69,6 +69,7 @@ rex.Chars.End() // `$`
 rex.Chars.Any() // `.`
 rex.Chars.Range(from rune, to rune)  // `[a-z]`
 rex.Chars.Single(r rune) // `r`
+rex.Chars.Unicode(unicode.Greek) // \p{Greek}
 ```
 
 If you want to combine mutiple character classes, use `rex.Common.Class`:

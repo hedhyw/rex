@@ -50,5 +50,17 @@ func TestRexChars(t *testing.T) {
 		Name:     "range_digits",
 		Chain:    []dialect.Token{base.Chars.Range('0', '9')},
 		Expected: `[0-9]`,
+	}, {
+		Name:     "unicode_greek",
+		Chain:    []dialect.Token{base.Chars.Unicode(unicode.Greek)},
+		Expected: `\p{Greek}`,
+	}, {
+		Name:     "unicode_control",
+		Chain:    []dialect.Token{base.Chars.Unicode(unicode.Cc)},
+		Expected: `\p{Cc}`,
+	}, {
+		Name:     "unicode_invalid",
+		Chain:    []dialect.Token{base.Chars.Unicode(&unicode.RangeTable{})},
+		Expected: ``,
 	}}.Run(t)
 }

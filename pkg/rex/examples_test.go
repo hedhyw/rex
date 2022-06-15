@@ -3,6 +3,7 @@ package rex_test
 import (
 	"fmt"
 	"log"
+	"unicode"
 
 	"github.com/hedhyw/rex/pkg/rex"
 )
@@ -122,4 +123,18 @@ func Example_emailRawSecond() {
 	// regular expression: ^[a-zA-Z\d]+@[a-zA-Z\d]+\.[a-zA-Z\d]{2,3}$
 	// rex@example.com: true
 	// rexexample.com: false
+}
+
+func Example_unicode() {
+	re := rex.New(
+		rex.Chars.Begin(),
+		rex.Chars.Unicode(unicode.Hiragana),
+		rex.Chars.End(),
+	).MustCompile()
+
+	fmt.Println("ひ", re.MatchString("ひ"))
+	fmt.Println("a", re.MatchString("a"))
+	// Output:
+	// ひ true
+	// a false
 }

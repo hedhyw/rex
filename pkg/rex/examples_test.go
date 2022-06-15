@@ -138,3 +138,24 @@ func Example_unicode() {
 	// ひ true
 	// a false
 }
+
+func Example_unicodeByName() {
+	re := rex.New(
+		rex.Chars.Begin(),
+		rex.Common.Class(
+			rex.Chars.UnicodeByName("Hiragana"),
+			rex.Chars.UnicodeByName("Katakana"),
+		),
+		rex.Chars.End(),
+	).MustCompile()
+
+	fmt.Println("Hiragana: ひ", re.MatchString("ひ"))
+	fmt.Println("Katakana: ヒ", re.MatchString("ひ"))
+	fmt.Println("Kanji: 家", re.MatchString("家"))
+	fmt.Println("Other: a", re.MatchString("a"))
+	// Output:
+	// Hiragana: ひ true
+	// Katakana: ヒ true
+	// Kanji: 家 false
+	// Other: a false
+}

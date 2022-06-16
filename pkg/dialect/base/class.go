@@ -22,6 +22,11 @@ func newClassToken(classTokens ...dialect.Token) ClassToken {
 	}
 }
 
+// Unwrap implements dialect.ClassToken.
+func (ct ClassToken) Unwrap() dialect.ClassToken {
+	return ct.withoutBrackets()
+}
+
 func (ct ClassToken) withoutBrackets() ClassToken {
 	ct.brackets = false
 
@@ -46,15 +51,7 @@ func (ct ClassToken) WriteTo(w dialect.StringByteWriter) (n int, err error) {
 		}
 	}
 
-	for _, tok := range ct.classTokens {
-		if classTok, ok := tok.(ClassToken); ok {
-			tokens = append(tokens, classTok.withoutBrackets())
-
-			continue
-		}
-
-		tokens = append(tokens, tok)
-	}
+	tokens = append(tokens, ct.classTokens...)
 
 	if ct.brackets {
 		tokens = append(tokens, helper.ByteToken(']'))

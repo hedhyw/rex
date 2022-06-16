@@ -55,6 +55,29 @@ func (CharsBaseDialect) Any() RepetableClassToken {
 	)
 }
 
+// Runes create a class that contains defined runes.
+// It is safe to pass unicode characters.
+//
+// Example usage:
+//   Runes("a") // == Chars.Single('a')
+//   Runes("ab") // == Common.Class(Chars.Single('a'), Chars.Single('b'))
+//
+// Regex: `[abc]`.
+func (CharsBaseDialect) Runes(val string) RepetableClassToken {
+	// It is not accurate capacity, but enough.
+	tokens := make([]dialect.Token, 0, len(val))
+	for _, r := range val {
+		tokens = append(tokens, Chars.Single(r))
+	}
+
+	classToken := newClassToken(tokens...)
+	if len(tokens) <= 1 {
+		classToken = classToken.withoutBrackets()
+	}
+
+	return newRepetableClassToken(classToken)
+}
+
 // Range of characters.
 // The input is not validated.
 //

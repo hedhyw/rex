@@ -11,22 +11,24 @@ import (
 func Example_basicMethods() {
 	rexRe := rex.New(rex.Chars.Any().ZeroOrMore())
 
-	// Use Compile if you speicfy dynamic arguments.
+	// Use Compile if you spcify dynamic arguments.
 	re, err := rexRe.Compile()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	_ = re
+	fmt.Println(`re.MatchString("a"):`, re.MatchString("a"))
 
 	// Use MustCompile if you don't speicfy dynamic arguments.
 	re = rexRe.MustCompile()
-	_ = re
+	fmt.Println(`re.MatchString("a"):`, re.MatchString("a"))
 
 	// We can get constructed regular expression.
-	fmt.Println(rexRe.String())
+	fmt.Println(`rexRe.String():`, rexRe.String())
 	// Output:
-	// .*
+	// re.MatchString("a"): true
+	// re.MatchString("a"): true
+	// rexRe.String(): .*
 }
 
 func Example_basicUsage() {
@@ -51,33 +53,25 @@ func Example_basicUsage() {
 }
 
 func Example_emailRange() {
+	alphaNum := rex.Common.Class(
+		rex.Chars.Range('a', 'z'),
+		rex.Chars.Range('A', 'Z'),
+		rex.Chars.Digits(),
+	).OneOrMore() // `[a-zA-Z0-9]`
+
 	re := rex.New(
 		rex.Chars.Begin(), // `^`
 
-		rex.Common.Class( // `[a-zA-Z0-9]`
-			rex.Chars.Range('a', 'z'),
-			rex.Chars.Range('A', 'Z'),
-			rex.Chars.Digits(),
-		).OneOrMore(),
-
+		alphaNum,
 		// Email delimeter.
 		rex.Chars.Single('@'), // `@`
 
 		// Domain part.
-		rex.Common.Class(
-			rex.Chars.Range('a', 'z'),
-			rex.Chars.Range('A', 'Z'),
-			rex.Chars.Digits(),
-		).OneOrMore(),
+		alphaNum,
 
 		// Should contain at least one dot.
 		rex.Chars.Single('.'), // `\`
-
-		rex.Common.Class(
-			rex.Chars.Range('a', 'z'),
-			rex.Chars.Range('A', 'Z'),
-			rex.Chars.Digits(),
-		).Between(2, 3),
+		alphaNum.Between(2, 3),
 
 		rex.Chars.End(), // `$`
 	).MustCompile()

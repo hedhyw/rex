@@ -69,7 +69,7 @@ rex.Chars.End() // `$`
 rex.Chars.Any() // `.`
 rex.Chars.Range(from rune, to rune)  // `[a-z]`
 rex.Chars.Single(r rune) // `r`
-rex.Chars.Runes(val rune) // `[abc]`
+rex.Chars.Runes("abc") // `[abc]`
 rex.Chars.Unicode(unicode.Greek) // \p{Greek}
 rex.Chars.UnicodeByName("Greek") // \p{Greek}
 ```

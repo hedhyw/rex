@@ -53,8 +53,8 @@ Common operators for core operations.
 ```golang
 rex.Common.Raw(raw string) // Raw regular expression.
 rex.Common.Text(text string) // Escaped text.
-rex.Common.Class(tokens ...dialect.Token) // Include specified characters.
-rex.Common.NotClass(tokens ...dialect.Token) // Exclude specified characters.
+rex.Common.Class(tokens ...dialect.ClassToken) // Include specified characters.
+rex.Common.NotClass(tokens ...dialect.ClassToken) // Exclude specified characters.
 rex.Common.Single(r rune) // Single character.
 ```
 

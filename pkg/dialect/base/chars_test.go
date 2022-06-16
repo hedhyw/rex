@@ -119,12 +119,18 @@ func TestRexChars_Runes(t *testing.T) {
 		},
 		Expected: ``,
 	}, {
-		Name: "wrapped_once",
+		Name: "WrappedOnce",
 		Chain: []dialect.Token{
 			base.Common.Class(
 				base.Chars.Runes("abc"),
 			),
 		},
 		Expected: `[abc]`,
+	}, {
+		Name: "CanBeRepetable",
+		Chain: []dialect.Token{
+			base.Chars.Runes("abc").OneOrMore(),
+		},
+		Expected: `[abc]+`,
 	}}.Run(t)
 }

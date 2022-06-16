@@ -32,7 +32,7 @@ func (r Repetable) WriteTo(w dialect.StringByteWriter) (n int, err error) {
 	return helper.ProcessTokens(w, tokens)
 }
 
-func (r Repetable) withSuffix(suffix string) Repetable {
+func (r Repetable) withSuffix(suffix string) dialect.Token {
 	r.suffix = suffix
 
 	return r
@@ -41,21 +41,21 @@ func (r Repetable) withSuffix(suffix string) Repetable {
 // OneOrMore repeats one or more, prefer more chars.
 //
 // Regex: `+`.
-func (r Repetable) OneOrMore() Repetable {
+func (r Repetable) OneOrMore() dialect.Token {
 	return r.withSuffix("+")
 }
 
 // ZeroOrMore repeats zero or more, prefer more chars.
 //
 // Regex: `*`.
-func (r Repetable) ZeroOrMore() Repetable {
+func (r Repetable) ZeroOrMore() dialect.Token {
 	return r.withSuffix("*")
 }
 
 // ZeroOrMore repeats zero or one x, prefer one.
 //
 // Regex: `?`.
-func (r Repetable) ZeroOrOne() Repetable {
+func (r Repetable) ZeroOrOne() dialect.Token {
 	return r.withSuffix("?")
 }
 
@@ -63,7 +63,7 @@ func (r Repetable) ZeroOrOne() Repetable {
 // It doesn't validate an input.
 //
 // Regex: `{n,}`.
-func (r Repetable) EqualOrMoreThan(n int) Repetable {
+func (r Repetable) EqualOrMoreThan(n int) dialect.Token {
 	return r.withSuffix(fmt.Sprintf("{%d,}", n))
 }
 
@@ -71,6 +71,6 @@ func (r Repetable) EqualOrMoreThan(n int) Repetable {
 // It doesn't validate an input.
 //
 // Regex: `{from,to}`.
-func (r Repetable) Between(from, to int) Repetable {
+func (r Repetable) Between(from, to int) dialect.Token {
 	return r.withSuffix(fmt.Sprintf("{%d,%d}", from, to))
 }

@@ -3,6 +3,7 @@ package rex_test
 import (
 	"fmt"
 	"log"
+	"unicode"
 
 	"github.com/hedhyw/rex/pkg/rex"
 )
@@ -122,4 +123,39 @@ func Example_emailRawSecond() {
 	// regular expression: ^[a-zA-Z\d]+@[a-zA-Z\d]+\.[a-zA-Z\d]{2,3}$
 	// rex@example.com: true
 	// rexexample.com: false
+}
+
+func Example_unicode() {
+	re := rex.New(
+		rex.Chars.Begin(),
+		rex.Chars.Unicode(unicode.Hiragana),
+		rex.Chars.End(),
+	).MustCompile()
+
+	fmt.Println("ひ", re.MatchString("ひ"))
+	fmt.Println("a", re.MatchString("a"))
+	// Output:
+	// ひ true
+	// a false
+}
+
+func Example_unicodeByName() {
+	re := rex.New(
+		rex.Chars.Begin(),
+		rex.Common.Class(
+			rex.Chars.UnicodeByName("Hiragana"),
+			rex.Chars.UnicodeByName("Katakana"),
+		),
+		rex.Chars.End(),
+	).MustCompile()
+
+	fmt.Println("Hiragana: ひ", re.MatchString("ひ"))
+	fmt.Println("Katakana: ヒ", re.MatchString("ひ"))
+	fmt.Println("Kanji: 家", re.MatchString("家"))
+	fmt.Println("Other: a", re.MatchString("a"))
+	// Output:
+	// Hiragana: ひ true
+	// Katakana: ヒ true
+	// Kanji: 家 false
+	// Other: a false
 }

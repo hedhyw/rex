@@ -9,7 +9,7 @@ import (
 	"github.com/hedhyw/rex/pkg/dialect/base"
 )
 
-func TestRexChars(t *testing.T) {
+func TestRexChars_base(t *testing.T) {
 	test.RexTestCasesSlice{{
 		Name:     "any",
 		Chain:    []dialect.Token{base.Chars.Any()},
@@ -50,5 +50,33 @@ func TestRexChars(t *testing.T) {
 		Name:     "range_digits",
 		Chain:    []dialect.Token{base.Chars.Range('0', '9')},
 		Expected: `[0-9]`,
+	}}.Run(t)
+}
+
+func TestRexChars_unicode(t *testing.T) {
+	test.RexTestCasesSlice{{
+		Name:     "unicode_greek",
+		Chain:    []dialect.Token{base.Chars.Unicode(unicode.Greek)},
+		Expected: `\p{Greek}`,
+	}, {
+		Name:     "unicode_control",
+		Chain:    []dialect.Token{base.Chars.Unicode(unicode.Cc)},
+		Expected: `\p{Cc}`,
+	}, {
+		Name: "unicode_invalid",
+		Chain: []dialect.Token{base.Chars.Unicode(&unicode.RangeTable{
+			R16:         nil,
+			R32:         nil,
+			LatinOffset: 0,
+		})},
+		Expected: ``,
+	}, {
+		Name:     "unicode_by_name_greek",
+		Chain:    []dialect.Token{base.Chars.UnicodeByName("Greek")},
+		Expected: `\p{Greek}`,
+	}, {
+		Name:     "unicode_by_name_control",
+		Chain:    []dialect.Token{base.Chars.UnicodeByName("Cc")},
+		Expected: `\p{Cc}`,
 	}}.Run(t)
 }

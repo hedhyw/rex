@@ -55,7 +55,6 @@ rex.Common.Raw(raw string) // Raw regular expression.
 rex.Common.Text(text string) // Escaped text.
 rex.Common.Class(tokens ...dialect.RepetableClassToken) // Include specified characters.
 rex.Common.NotClass(tokens ...dialect.RepetableClassToken) // Exclude specified characters.
-rex.Common.Single(r rune) // Single character.
 ```
 
 ### Character classes

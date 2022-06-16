@@ -48,9 +48,3 @@ func unwrapClassTokens(classTokens []dialect.ClassToken) []dialect.Token {
 
 	return tokens
 }
-
-// Single specifies the class of a single character.
-// It is a synonym to `Chars.Single``.
-func (CommonBaseDialect) Single(r rune) RepetableClassToken {
-	return Chars.Single(r)
-}

@@ -13,7 +13,8 @@ const (
 	//   rex.New(rex.Common.Class(
 	//     rex.Chars.Digits(),
 	//     rex.Chars.Single('a'),
-	//   ) // `[0-9a]`
+	//     rex.Chars.Runes("bc"),
+	//   ) // `[0-9abc]`
 	Chars = base.Chars
 	// Common is a namespace that contains base regular expression helpers.
 	// It is an alias to github.com/hedhyw/rex/pkg/dialect/base.Common.

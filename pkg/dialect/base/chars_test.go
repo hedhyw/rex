@@ -80,3 +80,57 @@ func TestRexChars_unicode(t *testing.T) {
 		Expected: `\p{Cc}`,
 	}}.Run(t)
 }
+
+func TestRexChars_Runes(t *testing.T) {
+	test.RexTestCasesSlice{{
+		Name: "single",
+		Chain: []dialect.Token{
+			base.Chars.Runes("a"),
+		},
+		Expected: `a`,
+	}, {
+		Name: "abc",
+		Chain: []dialect.Token{
+			base.Chars.Runes("abc"),
+		},
+		Expected: `[abc]`,
+	}, {
+		Name: "escaped",
+		Chain: []dialect.Token{
+			base.Chars.Runes(".+"),
+		},
+		Expected: `[\.\+]`,
+	}, {
+		Name: "unicode",
+		Chain: []dialect.Token{
+			base.Chars.Runes("ひヒ家"),
+		},
+		Expected: `[\x{3072}\x{30D2}\x{5BB6}]`,
+	}, {
+		Name: "single_unicode",
+		Chain: []dialect.Token{
+			base.Chars.Runes("ひ"),
+		},
+		Expected: `\x{3072}`,
+	}, {
+		Name: "empty",
+		Chain: []dialect.Token{
+			base.Chars.Runes(""),
+		},
+		Expected: ``,
+	}, {
+		Name: "WrappedOnce",
+		Chain: []dialect.Token{
+			base.Common.Class(
+				base.Chars.Runes("abc"),
+			),
+		},
+		Expected: `[abc]`,
+	}, {
+		Name: "CanBeRepetable",
+		Chain: []dialect.Token{
+			base.Chars.Runes("abc").OneOrMore(),
+		},
+		Expected: `[abc]+`,
+	}}.Run(t)
+}

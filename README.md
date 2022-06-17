@@ -53,9 +53,8 @@ Common operators for core operations.
 ```golang
 rex.Common.Raw(raw string) // Raw regular expression.
 rex.Common.Text(text string) // Escaped text.
-rex.Common.Class(tokens ...dialect.ClassToken) // Include specified characters.
-rex.Common.NotClass(tokens ...dialect.ClassToken) // Exclude specified characters.
-rex.Common.Single(r rune) // Single character.
+rex.Common.Class(tokens ...dialect.RepetableClassToken) // Include specified characters.
+rex.Common.NotClass(tokens ...dialect.RepetableClassToken) // Exclude specified characters.
 ```
 
 ### Character classes
@@ -69,6 +68,7 @@ rex.Chars.End() // `$`
 rex.Chars.Any() // `.`
 rex.Chars.Range(from rune, to rune)  // `[a-z]`
 rex.Chars.Single(r rune) // `r`
+rex.Chars.Runes("abc") // `[abc]`
 rex.Chars.Unicode(unicode.Greek) // \p{Greek}
 rex.Chars.UnicodeByName("Greek") // \p{Greek}
 ```
@@ -87,14 +87,17 @@ rex.Common.NotClass(rex.Chars.Digits(), rex.Chars.Single('a'))
 
 ### Repetitions
 
-Helpers that specify how to repeat characters. They can be called on character tokens.
+Helpers that specify how to repeat characters. They can be called on character class tokens.
 
 ```golang
-ClassToken.OneOrMore() // `+`
-ClassToken.ZeroOrMore() // `*`
-ClassToken.ZeroOrOne() // `?`
-ClassToken.EqualOrMoreThan(n int) // `{n,}`
-ClassToken.Between(n, m int) // `{n,m}`
+RepetableClassToken.OneOrMore() // `+`
+RepetableClassToken.ZeroOrMore() // `*`
+RepetableClassToken.ZeroOrOne() // `?`
+RepetableClassToken.EqualOrMoreThan(n int) // `{n,}`
+RepetableClassToken.Between(n, m int) // `{n,m}`
+
+// Example:
+rex.Chars.Digits().OneOrMore() // [0-9]+
 ```
 
 

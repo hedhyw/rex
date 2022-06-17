@@ -16,8 +16,8 @@ type CommonBaseDialect dialect.Dialect
 const Common CommonBaseDialect = "CommonBaseDialect"
 
 // Raw appends regular expression as is.
-func (CommonBaseDialect) Raw(raw string) ClassToken {
-	return newClassToken(helper.StringToken(raw)).withoutBrackets()
+func (CommonBaseDialect) Raw(raw string) RawToken {
+	return RawToken{value: raw}
 }
 
 // Text appends the text, and escapes all regular expression metacharacters.
@@ -26,13 +26,17 @@ func (CommonBaseDialect) Text(text string) dialect.Token {
 }
 
 // Class specifies the class of characters.
-func (CommonBaseDialect) Class(tokens ...dialect.ClassToken) ClassToken {
-	return newClassToken(unwrapClassTokens(tokens)...)
+func (CommonBaseDialect) Class(tokens ...dialect.ClassToken) RepetableClassToken {
+	return newRepetableClassToken(
+		newClassToken(unwrapClassTokens(tokens)...),
+	)
 }
 
 // NotClass specifies the class of characters that should be excluded.
-func (CommonBaseDialect) NotClass(tokens ...dialect.ClassToken) ClassToken {
-	return newClassToken(unwrapClassTokens(tokens)...).withExclude()
+func (CommonBaseDialect) NotClass(tokens ...dialect.ClassToken) RepetableClassToken {
+	return newRepetableClassToken(
+		newClassToken(unwrapClassTokens(tokens)...).withExclude(),
+	)
 }
 
 func unwrapClassTokens(classTokens []dialect.ClassToken) []dialect.Token {
@@ -43,10 +47,4 @@ func unwrapClassTokens(classTokens []dialect.ClassToken) []dialect.Token {
 	}
 
 	return tokens
-}
-
-// Single specifies the class of a single character.
-// It is a synonym to `Chars.Single``.
-func (CommonBaseDialect) Single(r rune) ClassToken {
-	return Chars.Single(r)
 }

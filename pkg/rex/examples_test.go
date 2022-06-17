@@ -57,17 +57,17 @@ func Example_emailRange() {
 		rex.Chars.Range('a', 'z'),
 		rex.Chars.Range('A', 'Z'),
 		rex.Chars.Digits(),
-	).OneOrMore() // `[a-zA-Z0-9]`
+	) // `[a-zA-Z0-9]`
 
 	re := rex.New(
 		rex.Chars.Begin(), // `^`
 
-		alphaNum,
+		alphaNum.OneOrMore(),
 		// Email delimeter.
 		rex.Chars.Single('@'), // `@`
 
 		// Domain part.
-		alphaNum,
+		alphaNum.OneOrMore(),
 
 		// Should contain at least one dot.
 		rex.Chars.Single('.'), // `\`

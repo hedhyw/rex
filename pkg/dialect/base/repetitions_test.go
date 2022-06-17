@@ -9,7 +9,7 @@ import (
 )
 
 func TestRexClassRepetitions(t *testing.T) {
-	getABClass := func() base.ClassToken {
+	getABClass := func() base.RepetableClassToken {
 		return base.Common.Class(
 			base.Chars.Single('a'),
 			base.Chars.Single('b'),

@@ -38,5 +38,17 @@ func TestRexClass(t *testing.T) {
 			),
 		},
 		Expected: `[A-Z0]`,
+	}, {
+		Name: "ClassInClassInClass",
+		Chain: []dialect.Token{
+			base.Common.Class(
+				base.Common.Class(
+					base.Common.Class(
+						base.Chars.Digits(),
+					),
+				),
+			),
+		},
+		Expected: `[\d]`,
 	}}.Run(t)
 }

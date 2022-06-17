@@ -63,15 +63,19 @@ func (gt GroupToken) WriteTo(w dialect.StringByteWriter) (n int, err error) {
 	return helper.ProcessTokens(w, tokens)
 }
 
-// WithName add a name to captured group. It overrides non-captured if set.
+// WithName add a name to captured group.
+//
+// It overrides non-captured if set.
 func (gt GroupToken) WithName(name string) GroupToken {
 	gt.prefix = "?P<" + regexp.QuoteMeta(name) + ">"
 
 	return gt
 }
 
-// NonCaptured marks group as non-captured that will not be included
-// in group results. It overrides name if set.
+// NonCaptured marks group as non-captured. It means that this group
+// will not be included in group submatch results.
+//
+// It overrides name if set.
 func (gt GroupToken) NonCaptured() GroupToken {
 	gt.prefix = "?:"
 

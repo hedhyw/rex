@@ -40,10 +40,13 @@ const (
 	//
 	// Example usage:
 	//
-	//   base.Group.Define(
+	//   rex.New(rex.Group.Define(
 	//     base.Chars.Single('a'),
-	//     base.Chars.Composite('a'),
-	//   ).Repeat().OneOrMore() // (a)+
+	//   ).Repeat().OneOrMore()) // (a)+
 	//
+	//   rex.New(rex.Group.Composite(
+	//     rex.Chars.Single('a'),
+	//     rex.Common.Text("rex"),
+	//   )) // (?:a|rex)
 	Group = base.Group
 )

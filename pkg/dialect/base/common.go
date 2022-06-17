@@ -26,17 +26,13 @@ func (CommonBaseDialect) Text(text string) dialect.Token {
 }
 
 // Class specifies the class of characters.
-func (CommonBaseDialect) Class(tokens ...dialect.ClassToken) RepetableClassToken {
-	return newRepetableClassToken(
-		newClassToken(unwrapClassTokens(tokens)...),
-	)
+func (CommonBaseDialect) Class(tokens ...dialect.ClassToken) ClassToken {
+	return newClassToken(unwrapClassTokens(tokens)...)
 }
 
 // NotClass specifies the class of characters that should be excluded.
-func (CommonBaseDialect) NotClass(tokens ...dialect.ClassToken) RepetableClassToken {
-	return newRepetableClassToken(
-		newClassToken(unwrapClassTokens(tokens)...).withExclude(),
-	)
+func (CommonBaseDialect) NotClass(tokens ...dialect.ClassToken) ClassToken {
+	return newClassToken(unwrapClassTokens(tokens)...).withExclude()
 }
 
 func unwrapClassTokens(classTokens []dialect.ClassToken) []dialect.Token {

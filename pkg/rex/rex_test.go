@@ -20,10 +20,10 @@ func TestRexGeneral(t *testing.T) {
 		Chain: []dialect.Token{
 			rex.Chars.Begin(),
 			// ID should begin with lowercased character.
-			rex.Chars.Range('a', 'z').OneOrMore(),
+			rex.Chars.Range('a', 'z').Repeat().OneOrMore(),
 			// ID should contain number inside brackets [#].
 			rex.Chars.Single('['),
-			rex.Chars.Digits().OneOrMore(),
+			rex.Chars.Digits().Repeat().OneOrMore(),
 			rex.Chars.Single(']'),
 			rex.Chars.End(),
 		},
@@ -37,7 +37,7 @@ func TestRexGeneral(t *testing.T) {
 				rex.Chars.Range('a', 'z'),
 				rex.Chars.Range('A', 'Z'),
 				rex.Chars.Digits(),
-			).OneOrMore(),
+			).Repeat().OneOrMore(),
 
 			// Email delimeter.
 			rex.Chars.Single('@'),
@@ -47,7 +47,7 @@ func TestRexGeneral(t *testing.T) {
 				rex.Chars.Range('a', 'z'),
 				rex.Chars.Range('A', 'Z'),
 				rex.Chars.Digits(),
-			).OneOrMore(),
+			).Repeat().OneOrMore(),
 
 			// Should contain at least one dot.
 			rex.Chars.Single('.'),
@@ -56,7 +56,7 @@ func TestRexGeneral(t *testing.T) {
 				rex.Chars.Range('a', 'z'),
 				rex.Chars.Range('A', 'Z'),
 				rex.Chars.Digits(),
-			).Between(2, 3),
+			).Repeat().Between(2, 3),
 
 			rex.Chars.End(),
 		},

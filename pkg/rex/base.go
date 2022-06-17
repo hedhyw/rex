@@ -36,4 +36,14 @@ const (
 	//   // Exclude characters.
 	//   rex.New(rex.Common.Class(rex.Chars.Digits())) // `[^0-9]`
 	Common = base.Common
+	// Group is a namespace that contains helpers for grouping expressions.
+	//
+	// Example usage:
+	//
+	//   base.Group.Define(
+	//     base.Chars.Single('a'),
+	//     base.Chars.Composite('a'),
+	//   ).Repeat().OneOrMore() // (a)+
+	//
+	Group = base.Group
 )

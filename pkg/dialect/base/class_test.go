@@ -50,5 +50,13 @@ func TestRexClass(t *testing.T) {
 			),
 		},
 		Expected: `[\d]`,
+	}, {
+		Name: "HexDigitsWrapOnce",
+		Chain: []dialect.Token{
+			base.Common.Class(
+				base.Chars.HexDigits(),
+			),
+		},
+		Expected: `[[:xdigit:]]`,
 	}}.Run(t)
 }

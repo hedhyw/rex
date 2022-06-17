@@ -7,21 +7,21 @@ import (
 	"github.com/hedhyw/rex/pkg/dialect"
 )
 
-// Repetable helps to add repetition suffix.
-type Repetable struct {
+// Repetition helps to add repetition suffix.
+type Repetition struct {
 	token  dialect.Token
 	suffix string
 }
 
-func newRepetable(token dialect.Token) Repetable {
-	return Repetable{
+func newRepetition(token dialect.Token) Repetition {
+	return Repetition{
 		token:  token,
 		suffix: "",
 	}
 }
 
 // WriteTo implements dialect.Token interface.
-func (r Repetable) WriteTo(w dialect.StringByteWriter) (n int, err error) {
+func (r Repetition) WriteTo(w dialect.StringByteWriter) (n int, err error) {
 	tokens := make([]dialect.Token, 0, 2)
 	tokens = append(tokens, r.token)
 
@@ -32,7 +32,7 @@ func (r Repetable) WriteTo(w dialect.StringByteWriter) (n int, err error) {
 	return helper.ProcessTokens(w, tokens)
 }
 
-func (r Repetable) withSuffix(suffix string) dialect.Token {
+func (r Repetition) withSuffix(suffix string) dialect.Token {
 	r.suffix = suffix
 
 	return r
@@ -41,21 +41,21 @@ func (r Repetable) withSuffix(suffix string) dialect.Token {
 // OneOrMore repeats one or more, prefer more chars.
 //
 // Regex: `+`.
-func (r Repetable) OneOrMore() dialect.Token {
+func (r Repetition) OneOrMore() dialect.Token {
 	return r.withSuffix("+")
 }
 
 // ZeroOrMore repeats zero or more, prefer more chars.
 //
 // Regex: `*`.
-func (r Repetable) ZeroOrMore() dialect.Token {
+func (r Repetition) ZeroOrMore() dialect.Token {
 	return r.withSuffix("*")
 }
 
 // ZeroOrMore repeats zero or one x, prefer one.
 //
 // Regex: `?`.
-func (r Repetable) ZeroOrOne() dialect.Token {
+func (r Repetition) ZeroOrOne() dialect.Token {
 	return r.withSuffix("?")
 }
 
@@ -63,7 +63,7 @@ func (r Repetable) ZeroOrOne() dialect.Token {
 // It doesn't validate an input.
 //
 // Regex: `{n,}`.
-func (r Repetable) EqualOrMoreThan(n int) dialect.Token {
+func (r Repetition) EqualOrMoreThan(n int) dialect.Token {
 	return r.withSuffix(fmt.Sprintf("{%d,}", n))
 }
 
@@ -71,6 +71,6 @@ func (r Repetable) EqualOrMoreThan(n int) dialect.Token {
 // It doesn't validate an input.
 //
 // Regex: `{from,to}`.
-func (r Repetable) Between(from, to int) dialect.Token {
+func (r Repetition) Between(from, to int) dialect.Token {
 	return r.withSuffix(fmt.Sprintf("{%d,%d}", from, to))
 }

@@ -22,10 +22,10 @@ regexp.MustCompile(`^[a-z]+\[[0-9]+\]$`)
 rex.New(
     rex.Chars.Begin(), // `^`
     // ID should begin with lowercased character.
-    rex.Chars.Range('a', 'z').OneOrMore(), // `[a-z]+`
+    rex.Chars.Range('a', 'z').Repeat().OneOrMore(), // `[a-z]+`
     // ID should contain number inside brackets [#].
     rex.Chars.Single('['), // `[`
-    rex.Chars.Digits().OneOrMore(), // `[0-9]+`
+    rex.Chars.Digits().Repeat().OneOrMore(), // `[0-9]+`
     rex.Chars.Single(']'), // `]`
     rex.Chars.End(), // `$`
 ).MustCompile()
@@ -53,8 +53,8 @@ Common operators for core operations.
 ```golang
 rex.Common.Raw(raw string) // Raw regular expression.
 rex.Common.Text(text string) // Escaped text.
-rex.Common.Class(tokens ...dialect.RepetableClassToken) // Include specified characters.
-rex.Common.NotClass(tokens ...dialect.RepetableClassToken) // Exclude specified characters.
+rex.Common.Class(tokens ...dialect.ClassToken) // Include specified characters.
+rex.Common.NotClass(tokens ...dialect.ClassToken) // Exclude specified characters.
 ```
 
 ### Character classes
@@ -62,15 +62,28 @@ rex.Common.NotClass(tokens ...dialect.RepetableClassToken) // Exclude specified 
 Single characters and classes, that can be used as-is, as well as childs to `rex.CommonClass` or `rex.CommonNotClass`.
 
 ```golang
-rex.Chars.Digits() // `[0-9]`
-rex.Chars.Begin() // `^`
-rex.Chars.End() // `$`
-rex.Chars.Any() // `.`
-rex.Chars.Range(from rune, to rune)  // `[a-z]`
-rex.Chars.Single(r rune) // `r`
-rex.Chars.Runes("abc") // `[abc]`
-rex.Chars.Unicode(unicode.Greek) // \p{Greek}
-rex.Chars.UnicodeByName("Greek") // \p{Greek}
+rex.Chars.Digits()               // `[0-9]`
+rex.Chars.Begin()                // `^`
+rex.Chars.End()                  // `$`
+rex.Chars.Any()                  // `.`
+rex.Chars.Range('a', 'z')        // `[a-z]`
+rex.Chars.Single('r')            // `r`
+rex.Chars.Runes("abc")           // `[abc]`
+rex.Chars.Unicode(unicode.Greek) // `\p{Greek}`
+rex.Chars.UnicodeByName("Greek") // `\p{Greek}`
+rex.Chars.Alphanumeric()         // `[0-9A-Za-z]`
+rex.Chars.Alphabetic()           // `[A-Za-z]`
+rex.Chars.ASCII()                // `[\x00-\x7F]`
+rex.Chars.Whitespace()           // `[\t\n\v\f\r ]`
+rex.Chars.WordCharacter()        // `[0-9A-Za-z_]`
+rex.Chars.Blank()                // `[\t ]`
+rex.Chars.Control()              // `[\x00-\x1F\x7F]`
+rex.Chars.Graphical()            // `[[:graph:]]`
+rex.Chars.Lower()                // `[a-z]`
+rex.Chars.Printable()            // `[ [:graph:]]`
+rex.Chars.Punctuation()          // `[!-/:-@[-`{-~]`
+rex.Chars.Upper()                // `[A-Z]`
+rex.Chars.HexDigits()            // `[0-9A-Fa-f]`
 ```
 
 If you want to combine mutiple character classes, use `rex.Common.Class`:
@@ -84,22 +97,38 @@ rex.Common.NotClass(rex.Chars.Digits(), rex.Chars.Single('a'))
 // It will produce `[^0-9a]`.
 ```
 
+### Groups
+
+Helpers for grouping expressions.
+
+```golang
+// Define a captured group. That can help to select part of the text.
+rex.Group.Define(rex.Chars.Single('a'), rex.Chars.Single('b')) // (ab)
+// A group that defines "OR" condition for given expressions.
+// Example: "a" or "rex", ...
+rex.Group.Composite(rex.Chars.Single('a'), rex.Common.Text("rex")) // (?:a|rex)
+
+// Define non-captured group. The result will not be captured.
+rex.Group.Define(rex.Chars.Single('a')).NonCaptured() // (?:a)
+// Define a group with a name.
+rex.Group.Define(rex.Chars.Single('a')).WithName("my_name") // (?P<my_name>a)
+```
 
 ### Repetitions
 
 Helpers that specify how to repeat characters. They can be called on character class tokens.
 
 ```golang
-RepetableClassToken.OneOrMore() // `+`
+RepetableClassToken.Repeat().OneOrMore() // `+`
 RepetableClassToken.ZeroOrMore() // `*`
 RepetableClassToken.ZeroOrOne() // `?`
 RepetableClassToken.EqualOrMoreThan(n int) // `{n,}`
 RepetableClassToken.Between(n, m int) // `{n,m}`
 
 // Example:
-rex.Chars.Digits().OneOrMore() // [0-9]+
+rex.Chars.Digits().Repeat().OneOrMore() // [0-9]+
+rex.Group.Define(rex.Chars.Single('a')).Repeat().OneOrMore() // (a)+
 ```
-
 
 ## Examples
 
@@ -121,7 +150,7 @@ If we describe an email as `(alphanum)@(alphanum).(2-3 characters)`, then we can
         rex.Chars.Range('a', 'z'),
         rex.Chars.Range('A', 'Z'),
         rex.Chars.Digits(),
-    ).OneOrMore() // `[a-zA-Z0-9]`
+    ).Repeat().OneOrMore() // `[a-zA-Z0-9]`
 
     re := rex.New(
         rex.Chars.Begin(), // `^`

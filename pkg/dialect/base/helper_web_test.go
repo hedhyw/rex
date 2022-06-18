@@ -1,6 +1,7 @@
 package base_test
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/hedhyw/rex/internal/test"
@@ -87,4 +88,67 @@ func TestHostnameRFC1123(t *testing.T) {
 		getHostnameRFC1123ValidTestCases().WithMatched(true),
 		getHostnameRFC1123InvalidTestCases().WithMatched(false),
 	}.Run(t, base.Helper.HostnameRFC1123())
+}
+
+func getEmailValidTestCases() test.MatchTestCaseSlice {
+	return test.MatchTestCaseSlice{{
+		Name:  "email_ok_simple",
+		Value: "test@example.com",
+	}, {
+		Name:  "email_ok_dash",
+		Value: "test-email@example.com",
+	}, {
+		Name:  "email_ok_dot",
+		Value: "test.email@example.com",
+	}, {
+		Name:  "email_ok_underscore",
+		Value: "test_email@example.com",
+	}, {
+		Name:  "subdomain",
+		Value: "email@sub.example.com",
+	}, {
+		Name:  "number",
+		Value: "123@example.com",
+	}, {
+		Name:  "many_dots",
+		Value: "1.2.3.4.5.6.7.8.9.10@example.com",
+	}, {
+		Name:  "email_ok_long",
+		Value: strings.Repeat("1", 63) + "@example.com",
+	}, {
+		Name:  "email_ok_single_local",
+		Value: "0@example.com",
+	}}
+}
+
+func getEmailInvalidTestCases() test.MatchTestCaseSlice {
+	return test.MatchTestCaseSlice{{
+		Name:  "email_starts_with_a_dot",
+		Value: ".test@example.com",
+	}, {
+		Name:  "email_end_with_a_dot",
+		Value: "test.@example.com",
+	}, {
+		Name:  "email_two_dots_consecutively",
+		Value: "te..st@example.com",
+	}, {
+		Name:  "email_host_invalid",
+		Value: "test@127.0.0.1",
+	}, {
+		Name:  "email_two_at",
+		Value: "two@parts@example.com",
+	}, {
+		Name:  "email_long",
+		Value: strings.Repeat("1", 65) + "@example.com",
+	}, {
+		Name:  "email_no_local",
+		Value: "@example.com",
+	}}
+}
+
+func TestEmail(t *testing.T) {
+	test.MatchTestCaseGroupSlice{
+		getEmailValidTestCases().WithMatched(true),
+		getEmailInvalidTestCases().WithMatched(false),
+	}.Run(t, base.Helper.Email())
 }

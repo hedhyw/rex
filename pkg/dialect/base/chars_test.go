@@ -188,5 +188,11 @@ func TestRexChars_runes(t *testing.T) {
 			base.Chars.Runes("abc").Repeat().OneOrMore(),
 		},
 		Expected: `[abc]+`,
+	}, {
+		Name: "Punctuation",
+		Chain: []dialect.Token{
+			base.Chars.Runes("!#$%&'*+-/=?^_`{|}~"),
+		},
+		Expected: "[!#\\$\\x25&'\\*\\+\\x2D/=\\?\\^_`\\{\\|\\}~]",
 	}}.Run(t)
 }

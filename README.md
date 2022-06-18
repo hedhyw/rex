@@ -38,7 +38,7 @@ Yes, it requires more code, but it has its advantages.
 
 <img alt="Drake Hotline Bling meme" width=300px src="_docs/meme.png" />
 
-_The picture contains two frame fragments from [video](https://www.youtube.com/watch?v=uxpDa-c-4Mc)._
+_The picture contains two frame fragments from [the video](https://www.youtube.com/watch?v=uxpDa-c-4Mc)._
 
 ## Documentation
 

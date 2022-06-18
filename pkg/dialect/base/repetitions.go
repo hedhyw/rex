@@ -62,6 +62,13 @@ func (r Repetition) ZeroOrOne() dialect.Token {
 	return r.withSuffix("?")
 }
 
+// Exactly n times. It doesn't validate an input.
+//
+// Regex: `{n}`.
+func (r Repetition) Exactly(n int) dialect.Token {
+	return r.withSuffix(fmt.Sprintf("{%d}", n))
+}
+
 // EqualOrMoreThan repeats i or i+1 or ... or n, prefer more.
 // It doesn't validate an input.
 //

@@ -1,3 +1,4 @@
+// nolint: lll // Generated regular expression can be long.
 package rex_test
 
 import (
@@ -35,7 +36,7 @@ func Example_basicUsage() {
 	re := rex.New(
 		rex.Chars.Begin(), // `^`
 		// ID should begin with lowercased character.
-		rex.Chars.Range('a', 'z').Repeat().OneOrMore(), // `[a-z]+`
+		rex.Chars.Lower().Repeat().OneOrMore(), // `[a-z]+`
 		// ID should contain number inside brackets [#].
 		rex.Chars.Single('['),                   // `[`
 		rex.Chars.Digits().Repeat().OneOrMore(), // `[0-9]+`
@@ -47,41 +48,46 @@ func Example_basicUsage() {
 	fmt.Println("MatchString(\"abc[0]\"):", re.MatchString("abc[0]"))
 	fmt.Println("MatchString(\"abc0\"):", re.MatchString("abc0"))
 	// Output:
-	// re.String(): ^[a-z]+\[\d+\]$
+	// re.String(): ^[[:lower:]]+\[\d+\]$
 	// MatchString("abc[0]"): true
 	// MatchString("abc0"): false
 }
 
-func Example_emailRange() {
-	alphaNum := rex.Common.Class(
-		rex.Chars.Range('a', 'z'),
-		rex.Chars.Range('A', 'Z'),
-		rex.Chars.Digits(),
-	) // `[a-zA-Z0-9]`
+func Example_generalEmailCheck() {
+	// We can define a set of characters and reuse the block.
+	customCharacters := rex.Common.Class(
+		rex.Chars.Range('a', 'z'), // `[a-z]`
+		rex.Chars.Upper(),         // `[A-Z]`
+		rex.Chars.Single('-'),     // `\x2D`
+		rex.Chars.Digits(),        // `[0-9]`
+	) // `[a-zA-Z-0-9]`
 
 	re := rex.New(
 		rex.Chars.Begin(), // `^`
+		customCharacters.Repeat().OneOrMore(),
 
-		alphaNum.Repeat().OneOrMore(),
 		// Email delimeter.
 		rex.Chars.Single('@'), // `@`
 
-		// Domain part.
-		alphaNum.Repeat().OneOrMore(),
+		// Allow dot after delimter.
+		rex.Common.Class(
+			rex.Chars.Single('.'), // \.
+			customCharacters,
+		).Repeat().OneOrMore(),
 
-		// Should contain at least one dot.
-		rex.Chars.Single('.'), // `\`
-		alphaNum.Repeat().Between(2, 3),
+		// Email should contain at least one dot.
+		rex.Chars.Single('.'), // `\.`
+		rex.Chars.Alphanumeric().Repeat().Between(2, 3),
 
 		rex.Chars.End(), // `$`
 	).MustCompile()
 
 	fmt.Println("regular expression:", re.String())
-	fmt.Println("rex@example.com:", re.MatchString("rex@example.com"))
+	fmt.Println("rex-lib@example.com.uk:", re.MatchString("rex-lib@example.com.uk"))
 	fmt.Println("rexexample.com:", re.MatchString("rexexample.com"))
 	// Output:
-	// regular expression: ^[a-zA-Z\d]+@[a-zA-Z\d]+\.[a-zA-Z\d]{2,3}$
-	// rex@example.com: true
+	// regular expression: ^[a-z[:upper:]\x2D\d]+@[\.a-z[:upper:]\x2D\d]+\.[[:alnum:]]{2,3}$
+	// rex-lib@example.com.uk: true
 	// rexexample.com: false
 }
 
@@ -205,12 +211,12 @@ func Example_composite() {
 
 	fmt.Println("regular expression:", re.String())
 	fmt.Println(`"hello" matched: `, re.MatchString("hello"))
-	fmt.Println(`"worldr" matched: `, re.MatchString("worldr"))
+	fmt.Println(`"world" matched: `, re.MatchString("world"))
 	fmt.Println(`"rex" matched: `, re.MatchString("rex"))
 	// Output:
 	// regular expression: (?:hello|world)
 	// "hello" matched:  true
-	// "worldr" matched:  true
+	// "world" matched:  true
 	// "rex" matched:  false
 }
 
@@ -253,4 +259,78 @@ func Example_groupRepeat() {
 	// hellohello: true
 	// hellohellohello: true
 	// hellohellohellohello: false
+}
+
+func Example_phoneMatch() {
+	re := rex.New(
+		rex.Chars.Begin(),
+		rex.Helper.Phone(),
+		rex.Chars.End(),
+	).MustCompile()
+
+	fmt.Println("regular expression:", re.String())
+	fmt.Println("+15555555:", re.MatchString("+15555555"))
+	fmt.Println("(607) 123 4567:", re.MatchString("(607) 123 4567"))
+	fmt.Println("+22 607 123 4567:", re.MatchString("+22 607 123 4567"))
+	fmt.Println("invalid:", re.MatchString("invalid"))
+
+	// Output:
+	// regular expression: ^((?:\+[1-9]\d{7,14})|((?:\(\d{3}\)\s\d{3}\s\d{4})|(?:\+[1-9]\d{0,2}\s\d{2,3}\s\d{2,3}\s\d{4})))$
+	// +15555555: true
+	// (607) 123 4567: true
+	// +22 607 123 4567: true
+	// invalid: false
+}
+
+func Example_phoneFind() {
+	re := rex.New(
+		rex.Group.Define(
+			rex.Helper.Phone(),
+		).WithName("phone"),
+	).MustCompile()
+
+	const text = `
+	E.164:      +15555555
+	E.123.Intl: (607) 123 4567
+	E.123.Natl: +22 607 123 4567
+	`
+
+	fmt.Println("regular expression:", re.String())
+	submatches := re.FindAllStringSubmatch(text, -1)
+
+	for i, sub := range submatches {
+		fmt.Printf("submatches[%d]: %s\n", i, sub[0])
+	}
+
+	// Output:
+	// regular expression: (?P<phone>((?:\+[1-9]\d{7,14})|((?:\(\d{3}\)\s\d{3}\s\d{4})|(?:\+[1-9]\d{0,2}\s\d{2,3}\s\d{2,3}\s\d{4}))))
+	// submatches[0]: +15555555
+	// submatches[1]: (607) 123 4567
+	// submatches[2]: +22 607 123 4567
+}
+
+func Example_compositeInReadme() {
+	re := rex.New(
+		rex.Chars.Begin(),
+		rex.Group.Composite(
+			// Text matches exact text, symbols will be escaped.
+			rex.Common.Text("hello."),
+			// OR numbers.
+			rex.Chars.Digits().Repeat().OneOrMore(),
+		),
+		rex.Chars.End(),
+	).MustCompile()
+
+	fmt.Println("regular expression:", re.String())
+	fmt.Println("hello.:", re.MatchString("hello."))
+	fmt.Println("hello:", re.MatchString("hello"))
+	fmt.Println("123:", re.MatchString("123"))
+	fmt.Println("hello.123:", re.MatchString("hello.123"))
+
+	// Output:
+	// regular expression: ^(hello\.|\d+)$
+	// hello.: true
+	// hello: false
+	// 123: true
+	// hello.123: false
 }

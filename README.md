@@ -11,23 +11,27 @@ This is a regular expressions builder for gophers!
 
 ## Why?
 
-It improves readability and helps to construct regular expressions using human-friendly constructions. Also, it allows commenting and reusing blocks, which improves the quality of the code.
+It makes readability better and helps to construct regular expressions using human-friendly constructions. Also, it allows commenting and reusing blocks, which improves the quality of code.
 
-Let's see an example:
+It is just a builder, so it returns standart [`*regexp.Regexp`](https://pkg.go.dev/regexp#Regexp).
+
+The library supports [groups](#groups), [composits](#simple-composite), [classes](#character-classes), [flags](#flags) [repetitions](#repetitions) and if you want you can even use [raw regular expressions](#raw-regular-expression) in any place. Also it contains a set of [predefined helpers](#helper) for matching phones, emails, etc...
+
+Let's see an example of validating (`some_id[#]`):
 ```golang
 // Using regular expression string.
 regexp.MustCompile(`^[a-z]+\[[0-9]+\]$`)
 
 // Using this builder.
-rex.New(
+re := rex.New(
     rex.Chars.Begin(), // `^`
     // ID should begin with lowercased character.
-    rex.Chars.Range('a', 'z').Repeat().OneOrMore(), // `[a-z]+`
+    rex.Chars.Lower().Repeat().OneOrMore(), // `[a-z]+`
     // ID should contain number inside brackets [#].
-    rex.Chars.Single('['), // `[`
+    rex.Chars.Single('['),                   // `[`
     rex.Chars.Digits().Repeat().OneOrMore(), // `[0-9]+`
-    rex.Chars.Single(']'), // `]`
-    rex.Chars.End(), // `$`
+    rex.Chars.Single(']'),                   // `]`
+    rex.Chars.End(),                         // `$`
 ).MustCompile()
 ```
 
@@ -62,15 +66,16 @@ rex.Common.NotClass(tokens ...dialect.ClassToken) // Exclude specified character
 Single characters and classes, that can be used as-is, as well as childs to `rex.CommonClass` or `rex.CommonNotClass`.
 
 ```golang
-rex.Chars.Digits()               // `[0-9]`
 rex.Chars.Begin()                // `^`
 rex.Chars.End()                  // `$`
 rex.Chars.Any()                  // `.`
 rex.Chars.Range('a', 'z')        // `[a-z]`
-rex.Chars.Single('r')            // `r`
 rex.Chars.Runes("abc")           // `[abc]`
+rex.Chars.Single('r')            // `r`
 rex.Chars.Unicode(unicode.Greek) // `\p{Greek}`
 rex.Chars.UnicodeByName("Greek") // `\p{Greek}`
+
+rex.Chars.Digits()               // `[0-9]`
 rex.Chars.Alphanumeric()         // `[0-9A-Za-z]`
 rex.Chars.Alphabetic()           // `[A-Za-z]`
 rex.Chars.ASCII()                // `[\x00-\x7F]`
@@ -114,6 +119,12 @@ rex.Group.Define(rex.Chars.Single('a')).NonCaptured() // (?:a)
 rex.Group.Define(rex.Chars.Single('a')).WithName("my_name") // (?P<my_name>a)
 ```
 
+## Flags
+
+```golang
+// TODO: https://github.com/hedhyw/rex/issues/31
+```
+
 ### Repetitions
 
 Helpers that specify how to repeat characters. They can be called on character class tokens.
@@ -130,80 +141,112 @@ rex.Chars.Digits().Repeat().OneOrMore() // [0-9]+
 rex.Group.Define(rex.Chars.Single('a')).Repeat().OneOrMore() // (a)+
 ```
 
+## Helper
+
+Common regular expression patters that are ready to use.
+
+```golang
+rex.Helper.Phone() // Combines PhoneE164 and PhoneE123.
+rex.Helper.PhoneE164() // +155555555
+rex.Helper.PhoneE123() // Combines PhoneNationalE123 and PhoneInternationalE123.
+rex.Helper.PhoneNationalE123() // (607) 123 4567
+rex.Helper.PhoneInternationalE123() // +22 607 123 4567
+```
+
 ## Examples
 
 ### Simple email validator
 
-If we describe an email as `(alphanum)@(alphanum).(2-3 characters)`, then we can define our code:
+Let's describe a simple email regular expression in order to show the basic functionality (there is a more advanced helper `rex.Helper.Email()`):
 
-1. using ASCII classes:
+```golang
+// We can define a set of characters and reuse the block.
+customCharacters := rex.Common.Class(
+    rex.Chars.Range('a', 'z'), // `[a-z]`
+    rex.Chars.Upper(),         // `[A-Z]`
+    rex.Chars.Single('-'),     // `\x2D`
+    rex.Chars.Digits(),        // `[0-9]`
+) // `[a-zA-Z-0-9]`
 
-    Issue: [#9](https://github.com/hedhyw/rex/issues/9)
-    ```golang
-    // TODO
-    ```
+re := rex.New(
+    rex.Chars.Begin(), // `^`
+    customCharacters.Repeat().OneOrMore(),
 
-2. using character ranges:
+    // Email delimeter.
+    rex.Chars.Single('@'), // `@`
 
-    ```golang
-    alphaNum := rex.Common.Class(
-        rex.Chars.Range('a', 'z'),
-        rex.Chars.Range('A', 'Z'),
-        rex.Chars.Digits(),
-    ).Repeat().OneOrMore() // `[a-zA-Z0-9]`
+    // Allow dot after delimter.
+    rex.Common.Class(
+        rex.Chars.Single('.'), // \.
+        customCharacters,
+    ).Repeat().OneOrMore(),
 
-    re := rex.New(
-        rex.Chars.Begin(), // `^`
+    // Email should contain at least one dot.
+    rex.Chars.Single('.'), // `\.`
+    rex.Chars.Alphanumeric().Repeat().Between(2, 3),
 
-        alphaNum, 
-        // Email delimeter.
-        rex.Chars.Single('@'), // `@`
+    rex.Chars.End(), // `$`
+).MustCompile()
+```
 
-        // Domain part.
-        alphaNum,
-
-        // Should contain at least one dot.
-        rex.Chars.Single('.'), // `\`
-        alphaNum.Between(2, 3),
-
-        rex.Chars.End(), // `$`
-    ).MustCompile()
-    ```
-
-3. using predefined helper:
-
-    Issue: [#10](https://github.com/hedhyw/rex/issues/10)
-    ```golang
-    // TODO
-    ```
-
-4. using raw regular expression:
-
-    ```golang
-    rex.New(
-        rex.Chars.Begin(), // `^`
-        rex.Common.Raw("[a-zA-Z0-9]+"), // `[a-zA-Z0-9]+`
-        rex.Chars.Single('@'), // `@`
-        rex.Common.Raw("[a-zA-Z0-9]+"), // `[a-zA-Z0-9]+`
-        rex.Chars.End(), // `$`
-    ).MustCompile()
-
-    // Or even!
-
-    rex.New(
-        rex.Common.Raw(`^[a-zA-Z\d]+@[a-zA-Z\d]+\.[a-zA-Z\d]{2,3}$`),
-    ).MustCompile()
-    ```
-
-#### Sample text matcher
+#### Raw regular expression
 
 ```golang
 rex.New(
-    // It is safe to use any text in a regular expression, because it will
-    // be escaped.
-    rex.Common.Text(`hello worldr.`), // `hello worldr\.`
-    // It will match exactly the same text.
+    rex.Chars.Begin(), // `^`
+    rex.Common.Raw("[a-zA-Z0-9]+"), // `[a-zA-Z0-9]+`
+    rex.Chars.Single('@'), // `@`
+    rex.Common.Raw("[a-zA-Z0-9]+"), // `[a-zA-Z0-9]+`
+    rex.Chars.End(), // `$`
 ).MustCompile()
+
+// Or even!
+
+rex.New(
+    rex.Common.Raw(`^[a-zA-Z\d]+@[a-zA-Z\d]+\.[a-zA-Z\d]{2,3}$`),
+).MustCompile()
+```
+
+#### Simple composite
+
+```golang
+re := rex.New(
+    rex.Chars.Begin(),
+    rex.Group.Composite(
+        // Text matches exact text (symbols will be escaped).
+        rex.Common.Text("hello."),
+        // OR one or more numbers.
+        rex.Chars.Digits().Repeat().OneOrMore(),
+    ),
+    rex.Chars.End(),
+).MustCompile()
+
+re.MatchString("hello.")    // true
+re.MatchString("hello")     // false
+re.MatchString("123")       // true
+re.MatchString("hello.123") // false
+```
+
+## Example groups usage.
+
+```golang
+re := rex.New(
+    // Define a named group.
+    rex.Group.Define(
+        rex.Helper.Phone(),
+    ).WithName("phone"),
+).MustCompile()
+
+const text = `
+E.164:      +15555555
+E.123.Intl: (607) 123 4567
+E.123.Natl: +22 607 123 4567
+`
+
+submatches := re.FindAllStringSubmatch(text, -1)
+// submatches[0]: +15555555
+// submatches[1]: (607) 123 4567
+// submatches[2]: +22 607 123 4567
 ```
 
 #### More examples

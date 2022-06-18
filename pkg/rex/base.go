@@ -49,4 +49,8 @@ const (
 	//     rex.Common.Text("rex"),
 	//   )) // (?:a|rex)
 	Group = base.Group
+
+	// Helper is a namespace with common ready to use patterns.
+	//
+	Helper = base.Helper
 )

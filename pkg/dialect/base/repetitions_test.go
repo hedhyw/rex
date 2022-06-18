@@ -44,5 +44,9 @@ func TestRexClassRepetitions(t *testing.T) {
 		Name:     "RangeOneOrMore",
 		Chain:    []dialect.Token{base.Chars.Range('0', '9').Repeat().OneOrMore()},
 		Expected: `[0-9]+`,
+	}, {
+		Name:     "Exactly",
+		Chain:    []dialect.Token{base.Chars.Range('0', '9').Repeat().Exactly(2)},
+		Expected: `[0-9]{2}`,
 	}}.Run(t)
 }

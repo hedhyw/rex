@@ -15,7 +15,7 @@ It makes readability better and helps to construct regular expressions using hum
 
 It is just a builder, so it returns standart [`*regexp.Regexp`](https://pkg.go.dev/regexp#Regexp).
 
-The library supports [groups](#groups), [composits](#simple-composite), [classes](#character-classes), [flags](#flags) [repetitions](#repetitions) and if you want you can even use [raw regular expressions](#raw-regular-expression) in any place. Also it contains a set of [predefined helpers](#helper) for matching phones, emails, etc...
+The library supports [groups](#groups), [composits](#simple-composite), [classes](#character-classes), [flags](#flags), [repetitions](#repetitions) and if you want you can even use [raw regular expressions](#raw-regular-expression) in any place. Also it contains a set of [predefined helpers](#helper) for matching phones, emails, etc...
 
 Let's see an example of validating (`some_id[#]`):
 ```golang
@@ -37,7 +37,7 @@ Yes, it requires more code, but it has its advantages.
 
 ## Meme
 
-<img alt="Drake Hotline Bling meme" width=300px src="_docs/meme.png" />
+<img alt="Drake Hotline Bling meme" width=350px src="_docs/meme.png" />
 
 _The picture contains two frame fragments from [the video](https://www.youtube.com/watch?v=uxpDa-c-4Mc)._
 

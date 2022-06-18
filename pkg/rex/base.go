@@ -52,5 +52,11 @@ const (
 
 	// Helper is a namespace with common ready to use patterns.
 	//
+	// Example usage:
+	//   rex.New(
+	//     rex.Chars.Begin(),
+	//     rex.Helper.Phone(),
+	//     rex.Chars.End(),
+	//   ).MustCompile().Match("+15555555")
 	Helper = base.Helper
 )

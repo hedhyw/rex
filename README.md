@@ -35,6 +35,12 @@ re := rex.New(
 Yes, it requires more code, but it has its advantages.
 > More, but simpler code, fewer bugs.
 
+## Meme
+
+<img alt="Drake Hotline Bling meme" width=300px src="_docs/meme.png" />
+
+_The picture contains two frame fragments from [the video](https://www.youtube.com/watch?v=uxpDa-c-4Mc)._
+
 ## Documentation
 
 ```golang

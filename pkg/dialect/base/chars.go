@@ -22,37 +22,124 @@ const Chars CharsBaseDialect = "CharsBaseDialect"
 // Digits is an alias to [0-9]. ASCII.
 //
 // Regex: `\d`.
-func (CharsBaseDialect) Digits() RepetableClassToken {
-	return newRepetableClassToken(
-		newClassToken(helper.StringToken(`\d`)).withoutBrackets(),
-	)
+func (CharsBaseDialect) Digits() ClassToken {
+	return newClassToken(helper.StringToken(`\d`)).withoutBrackets()
+}
+
+// Alphanumeric specifies digits and alphabetic characters.
+// It is an alias to [0-9A-Za-z]. ASCII.
+//
+// Regex: `[[:alnum:]]`.
+func (CharsBaseDialect) Alphanumeric() ClassToken {
+	return newClassToken(helper.StringToken(`[:alnum:]`))
+}
+
+// Alphabetic specifies alphabetic lowercased and uppercased characters.
+// It is an alias to [A-Za-z]. ASCII.
+//
+// Regex: `[[:alpha:]]`.
+func (CharsBaseDialect) Alphabetic() ClassToken {
+	return newClassToken(helper.StringToken(`[:alpha:]`))
+}
+
+// ASCII only characters. It is an alias to [\x00-\x7F].
+//
+// Regex: `[[:ascii:]]`.
+func (CharsBaseDialect) ASCII() ClassToken {
+	return newClassToken(helper.StringToken(`[:ascii:]`))
+}
+
+// Whitespace specfies blank characters.
+// It is an alias to [\t\n\f\r ]. ASCII.
+//
+// Regex: `\s`.
+func (CharsBaseDialect) Whitespace() ClassToken {
+	return newClassToken(helper.StringToken(`\s`)).withoutBrackets()
+}
+
+// WordCharacter is an alias to [0-9A-Za-z_]. ASCII.
+//
+// Regex: `\w`.
+func (CharsBaseDialect) WordCharacter() ClassToken {
+	return newClassToken(helper.StringToken(`\w`)).withoutBrackets()
+}
+
+// Blank ASCII characters. It is an alias to [\t ].
+//
+// Regex: `[[:blank:]]`.
+func (CharsBaseDialect) Blank() ClassToken {
+	return newClassToken(helper.StringToken(`[:blank:]`))
+}
+
+// Control characters. It is an alias to [\x00-\x1F\x7F]. ASCII.
+//
+// Regex: `[[:cntrl:]]`.
+func (CharsBaseDialect) Control() ClassToken {
+	return newClassToken(helper.StringToken(`[:cntrl:]`))
+}
+
+// Graphical characters. ASCII.
+// It is an alias to [A-Za-z0-9!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~].
+//
+// Regex: `[[:graph:]]`.
+func (CharsBaseDialect) Graphical() ClassToken {
+	return newClassToken(helper.StringToken(`[:graph:]`))
+}
+
+// Lower cased ASCII characters. It is an alias to [a-z].
+//
+// Regex: `[[:lower:]]`.
+func (CharsBaseDialect) Lower() ClassToken {
+	return newClassToken(helper.StringToken(`[:lower:]`))
+}
+
+// Printable ASCII characters. It is an alias to [ [:graph:]].
+//
+// Regex: `[[:print:]]`.
+func (CharsBaseDialect) Printable() ClassToken {
+	return newClassToken(helper.StringToken(`[:print:]`))
+}
+
+// Punctuation ASCII characters. It is an alias to [!-/:-@[-`{-~].
+//
+// Regex: `[[:punct:]]`.
+func (CharsBaseDialect) Punctuation() ClassToken {
+	return newClassToken(helper.StringToken(`[:punct:]`))
+}
+
+// Upper case ASCII characters. It is an alias to [A-Z].
+//
+// Regex: `[[:upper:]]`.
+func (CharsBaseDialect) Upper() ClassToken {
+	return newClassToken(helper.StringToken(`[:upper:]`))
+}
+
+// HexDigits ASCII characters. It is an alias to  [0-9A-Fa-f].
+//
+// Regex: `[[:xdigit:]]`.
+func (CharsBaseDialect) HexDigits() ClassToken {
+	return newClassToken(helper.StringToken(`[:xdigit:]`))
 }
 
 // Begin of text by default or line if the flag EnableMultiline is set.
 //
 // Regex: `^`.
-func (CharsBaseDialect) Begin() RepetableClassToken {
-	return newRepetableClassToken(
-		newClassToken(helper.ByteToken('^')).withoutBrackets(),
-	)
+func (CharsBaseDialect) Begin() ClassToken {
+	return newClassToken(helper.ByteToken('^')).withoutBrackets()
 }
 
 // End of text or line if the flag EnableMultiline is set.
 //
 // Regex: `$`.
-func (CharsBaseDialect) End() RepetableClassToken {
-	return newRepetableClassToken(
-		newClassToken(helper.ByteToken('$')).withoutBrackets(),
-	)
+func (CharsBaseDialect) End() ClassToken {
+	return newClassToken(helper.ByteToken('$')).withoutBrackets()
 }
 
 // Any character, possibly including newline if the flag AnyIncludeNewLine() is set.
 //
 // Regex: `.`.
-func (CharsBaseDialect) Any() RepetableClassToken {
-	return newRepetableClassToken(
-		newClassToken(helper.ByteToken('.')).withoutBrackets(),
-	)
+func (CharsBaseDialect) Any() ClassToken {
+	return newClassToken(helper.ByteToken('.')).withoutBrackets()
 }
 
 // Runes create a class that contains defined runes.
@@ -63,7 +150,7 @@ func (CharsBaseDialect) Any() RepetableClassToken {
 //   Runes("ab") // == Common.Class(Chars.Single('a'), Chars.Single('b'))
 //
 // Regex: `[abc]`.
-func (CharsBaseDialect) Runes(val string) RepetableClassToken {
+func (CharsBaseDialect) Runes(val string) ClassToken {
 	// It is not accurate capacity, but enough.
 	tokens := make([]dialect.Token, 0, len(val))
 	for _, r := range val {
@@ -75,41 +162,39 @@ func (CharsBaseDialect) Runes(val string) RepetableClassToken {
 		classToken = classToken.withoutBrackets()
 	}
 
-	return newRepetableClassToken(classToken)
+	return classToken
 }
 
 // Range of characters.
 // The input is not validated.
 //
 // Regex: `[a-z]`.
-func (CharsBaseDialect) Range(from rune, to rune) RepetableClassToken {
-	return newRepetableClassToken(
-		newClassToken(helper.StringToken("%c-%c", from, to)),
-	)
+func (CharsBaseDialect) Range(from rune, to rune) ClassToken {
+	return newClassToken(helper.StringToken("%c-%c", from, to))
 }
 
 // Single character. It supports not ascii characters.
 // The input is not validated.
 //
 // Regex: `r`, `\\xHEX_CODE`, or  `\\x{HEX_CODE}`.
-func (CharsBaseDialect) Single(r rune) RepetableClassToken {
+func (CharsBaseDialect) Single(r rune) ClassToken {
 	if r < unicode.MaxASCII {
-		return newRepetableClassToken(newClassToken(
+		return newClassToken(
 			helper.StringToken(regexp.QuoteMeta(string(r))),
-		).withoutBrackets())
+		).withoutBrackets()
 	}
 
 	hexValue := strings.ToUpper(strconv.FormatInt(int64(r), 16))
 
 	if len(hexValue) == 2 {
-		return newRepetableClassToken(newClassToken(
+		return newClassToken(
 			helper.StringToken("\\x" + hexValue),
-		).withoutBrackets())
+		).withoutBrackets()
 	}
 
-	return newRepetableClassToken(newClassToken(
+	return newClassToken(
 		helper.StringToken("\\x{%s}", hexValue),
-	).withoutBrackets())
+	).withoutBrackets()
 }
 
 // Unicode class. It supports *unicode.RangeTable that is defined
@@ -121,7 +206,7 @@ func (CharsBaseDialect) Single(r rune) RepetableClassToken {
 //   Chars.Unicode(unicode.Greek)
 //
 // Regex: `\p{Greek}`.
-func (d CharsBaseDialect) Unicode(table *unicode.RangeTable) RepetableClassToken {
+func (d CharsBaseDialect) Unicode(table *unicode.RangeTable) ClassToken {
 	for name, t := range unicode.Categories {
 		if table == t {
 			return d.UnicodeByName(name)
@@ -134,9 +219,7 @@ func (d CharsBaseDialect) Unicode(table *unicode.RangeTable) RepetableClassToken
 		}
 	}
 
-	return newRepetableClassToken(
-		newClassToken(helper.StringToken("")).withoutBrackets(),
-	)
+	return newClassToken(helper.StringToken("")).withoutBrackets()
 }
 
 // UnicodeByName class. It is alternative to Chars.Unicode, but accepts
@@ -149,8 +232,6 @@ func (d CharsBaseDialect) Unicode(table *unicode.RangeTable) RepetableClassToken
 //   Chars.UnicodeByName("Greek")
 //
 // Regex: `\p{Greek}`.
-func (CharsBaseDialect) UnicodeByName(name string) RepetableClassToken {
-	return newRepetableClassToken(
-		newClassToken(helper.StringToken(`\p{%s}`, name)).withoutBrackets(),
-	)
+func (CharsBaseDialect) UnicodeByName(name string) ClassToken {
+	return newClassToken(helper.StringToken(`\p{%s}`, name)).withoutBrackets()
 }

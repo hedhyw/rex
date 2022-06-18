@@ -9,6 +9,62 @@ import (
 	"github.com/hedhyw/rex/pkg/dialect/base"
 )
 
+func TestRexCharsASCII(t *testing.T) {
+	test.RexTestCasesSlice{{
+		Name:     "Alphanumeric",
+		Chain:    []dialect.Token{base.Chars.Alphanumeric()},
+		Expected: `[[:alnum:]]`,
+	}, {
+		Name:     "Alphabetic",
+		Chain:    []dialect.Token{base.Chars.Alphabetic()},
+		Expected: `[[:alpha:]]`,
+	}, {
+		Name:     "ASCII",
+		Chain:    []dialect.Token{base.Chars.ASCII()},
+		Expected: `[[:ascii:]]`,
+	}, {
+		Name:     "Whitespace",
+		Chain:    []dialect.Token{base.Chars.Whitespace()},
+		Expected: `\s`,
+	}, {
+		Name:     "WordCharacter",
+		Chain:    []dialect.Token{base.Chars.WordCharacter()},
+		Expected: `\w`,
+	}, {
+		Name:     "Blank",
+		Chain:    []dialect.Token{base.Chars.Blank()},
+		Expected: `[[:blank:]]`,
+	}, {
+		Name:     "Control",
+		Chain:    []dialect.Token{base.Chars.Control()},
+		Expected: `[[:cntrl:]]`,
+	}, {
+		Name:     "Graphical",
+		Chain:    []dialect.Token{base.Chars.Graphical()},
+		Expected: `[[:graph:]]`,
+	}, {
+		Name:     "Lower",
+		Chain:    []dialect.Token{base.Chars.Lower()},
+		Expected: `[[:lower:]]`,
+	}, {
+		Name:     "Printable",
+		Chain:    []dialect.Token{base.Chars.Printable()},
+		Expected: `[[:print:]]`,
+	}, {
+		Name:     "Punctuation",
+		Chain:    []dialect.Token{base.Chars.Punctuation()},
+		Expected: `[[:punct:]]`,
+	}, {
+		Name:     "Upper",
+		Chain:    []dialect.Token{base.Chars.Upper()},
+		Expected: `[[:upper:]]`,
+	}, {
+		Name:     "HexDigits",
+		Chain:    []dialect.Token{base.Chars.HexDigits()},
+		Expected: `[[:xdigit:]]`,
+	}}.Run(t)
+}
+
 func TestRexChars_base(t *testing.T) {
 	test.RexTestCasesSlice{{
 		Name:     "any",
@@ -81,7 +137,7 @@ func TestRexChars_unicode(t *testing.T) {
 	}}.Run(t)
 }
 
-func TestRexChars_Runes(t *testing.T) {
+func TestRexChars_runes(t *testing.T) {
 	test.RexTestCasesSlice{{
 		Name: "single",
 		Chain: []dialect.Token{
@@ -129,7 +185,7 @@ func TestRexChars_Runes(t *testing.T) {
 	}, {
 		Name: "CanBeRepetable",
 		Chain: []dialect.Token{
-			base.Chars.Runes("abc").OneOrMore(),
+			base.Chars.Runes("abc").Repeat().OneOrMore(),
 		},
 		Expected: `[abc]+`,
 	}}.Run(t)

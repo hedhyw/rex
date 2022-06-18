@@ -9,11 +9,11 @@ import (
 )
 
 func TestRexClassRepetitions(t *testing.T) {
-	getABClass := func() base.RepetableClassToken {
+	getABClass := func() base.Repetition {
 		return base.Common.Class(
 			base.Chars.Single('a'),
 			base.Chars.Single('b'),
-		)
+		).Repeat()
 	}
 
 	test.RexTestCasesSlice{{
@@ -38,11 +38,11 @@ func TestRexClassRepetitions(t *testing.T) {
 		Expected: `[ab]?`,
 	}, {
 		Name:     "AnyOneOrMore",
-		Chain:    []dialect.Token{base.Chars.Any().OneOrMore()},
+		Chain:    []dialect.Token{base.Chars.Any().Repeat().OneOrMore()},
 		Expected: `.+`,
 	}, {
 		Name:     "RangeOneOrMore",
-		Chain:    []dialect.Token{base.Chars.Range('0', '9').OneOrMore()},
+		Chain:    []dialect.Token{base.Chars.Range('0', '9').Repeat().OneOrMore()},
 		Expected: `[0-9]+`,
 	}}.Run(t)
 }

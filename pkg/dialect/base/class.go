@@ -5,24 +5,6 @@ import (
 	"github.com/hedhyw/rex/pkg/dialect"
 )
 
-// RepetableClassToken handles repetitions of the class.
-type RepetableClassToken struct {
-	classToken dialect.ClassToken
-	Repetable
-}
-
-// Unwrap implements dialect.ClassToken.
-func (rct RepetableClassToken) Unwrap() dialect.ClassToken {
-	return rct.classToken.Unwrap()
-}
-
-func newRepetableClassToken(classToken dialect.ClassToken) RepetableClassToken {
-	return RepetableClassToken{
-		classToken: classToken,
-		Repetable:  newRepetable(classToken),
-	}
-}
-
 // ClassToken helps to specify class tokens.
 type ClassToken struct {
 	brackets    bool
@@ -36,6 +18,15 @@ func newClassToken(classTokens ...dialect.Token) ClassToken {
 		brackets:    true,
 		classTokens: classTokens,
 	}
+}
+
+// Repeat class token.
+func (ct ClassToken) Repeat() Repetition {
+	if len(ct.classTokens) == 0 {
+		return newRepetition(nil)
+	}
+
+	return newRepetition(ct)
 }
 
 // Unwrap implements dialect.ClassToken.
@@ -57,6 +48,10 @@ func (ct ClassToken) withExclude() ClassToken {
 
 // WriteTo implements dialect.Token interface.
 func (ct ClassToken) WriteTo(w dialect.StringByteWriter) (n int, err error) {
+	if len(ct.classTokens) == 0 {
+		return 0, nil
+	}
+
 	tokens := make([]dialect.Token, 0, 3+len(ct.classTokens))
 
 	if ct.brackets {

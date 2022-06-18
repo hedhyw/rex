@@ -154,6 +154,8 @@ rex.Helper.PhoneE164() // +155555555
 rex.Helper.PhoneE123() // Combines PhoneNationalE123 and PhoneInternationalE123.
 rex.Helper.PhoneNationalE123() // (607) 123 4567
 rex.Helper.PhoneInternationalE123() // +22 607 123 4567
+rex.Helper.HostnameRFC952() // Hostname by RFC-952 (stricter).
+rex.Helper.HostnameRFC1123() // Hostname by RFC-1123.
 ```
 
 ## Examples

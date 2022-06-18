@@ -8,6 +8,7 @@ import (
 	"github.com/hedhyw/rex/pkg/dialect/base"
 )
 
+// nolint: funlen // Unit test.
 func TestRexClass(t *testing.T) {
 	test.RexTestCasesSlice{{
 		Name: "ClassRangeAndSingle",
@@ -58,5 +59,17 @@ func TestRexClass(t *testing.T) {
 			),
 		},
 		Expected: `[[:xdigit:]]`,
+	}, {
+		Name: "ClassEmpty",
+		Chain: []dialect.Token{
+			base.Common.Class(),
+		},
+		Expected: ``,
+	}, {
+		Name: "ClassEmptyRepetition",
+		Chain: []dialect.Token{
+			base.Common.Class().Repeat().OneOrMore(),
+		},
+		Expected: ``,
 	}}.Run(t)
 }

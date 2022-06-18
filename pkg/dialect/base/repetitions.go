@@ -23,10 +23,13 @@ func newRepetition(token dialect.Token) Repetition {
 // WriteTo implements dialect.Token interface.
 func (r Repetition) WriteTo(w dialect.StringByteWriter) (n int, err error) {
 	tokens := make([]dialect.Token, 0, 2)
-	tokens = append(tokens, r.token)
 
-	if r.suffix != "" {
-		tokens = append(tokens, helper.StringToken(r.suffix))
+	if r.token != nil {
+		tokens = append(tokens, r.token)
+
+		if r.suffix != "" {
+			tokens = append(tokens, helper.StringToken(r.suffix))
+		}
 	}
 
 	return helper.ProcessTokens(w, tokens)

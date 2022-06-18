@@ -32,6 +32,12 @@ func TestRexGroup(t *testing.T) {
 		},
 		Expected: ``,
 	}, {
+		Name: "GroupEmptyRepeat",
+		Chain: []dialect.Token{
+			base.Group.Define().Repeat().OneOrMore(),
+		},
+		Expected: ``,
+	}, {
 		Name: "GroupNonCaptured",
 		Chain: []dialect.Token{
 			base.Group.Define(base.Chars.Single('a')).NonCaptured(),

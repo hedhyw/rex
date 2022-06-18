@@ -84,5 +84,9 @@ func (gt GroupToken) NonCaptured() GroupToken {
 
 // Repeat group.
 func (gt GroupToken) Repeat() Repetition {
+	if len(gt.tokens) == 0 {
+		return newRepetition(nil)
+	}
+
 	return newRepetition(gt)
 }

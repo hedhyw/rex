@@ -22,6 +22,10 @@ func newClassToken(classTokens ...dialect.Token) ClassToken {
 
 // Repeat class token.
 func (ct ClassToken) Repeat() Repetition {
+	if len(ct.classTokens) == 0 {
+		return newRepetition(nil)
+	}
+
 	return newRepetition(ct)
 }
 
@@ -44,6 +48,10 @@ func (ct ClassToken) withExclude() ClassToken {
 
 // WriteTo implements dialect.Token interface.
 func (ct ClassToken) WriteTo(w dialect.StringByteWriter) (n int, err error) {
+	if len(ct.classTokens) == 0 {
+		return 0, nil
+	}
+
 	tokens := make([]dialect.Token, 0, 3+len(ct.classTokens))
 
 	if ct.brackets {

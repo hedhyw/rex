@@ -19,9 +19,6 @@ The library supports [groups](#groups), [composits](#simple-composite), [classes
 
 Let's see an example of validating (`some_id[#]`):
 ```golang
-// Using regular expression string.
-regexp.MustCompile(`^[a-z]+\[[0-9]+\]$`)
-
 // Using this builder.
 re := rex.New(
     rex.Chars.Begin(), // `^`

@@ -83,3 +83,31 @@ func (h HelperDialect) Email() dialect.Token {
 		h.HostnameRFC1123(),
 	).NonCaptured()
 }
+
+func (HelperDialect) IPv4() dialect.Token {
+	ipToken := Group.Composite(
+		Group.Define( // 250-255.
+			Common.Text("25"),
+			Chars.Range('0', '5'),
+		).NonCaptured(),
+		Group.Define( // 200-249.
+			Chars.Single('2'),
+			Chars.Range('0', '4'),
+			Chars.Digits(),
+		).NonCaptured(),
+		Group.Define( // 000-199.
+			Chars.Runes("01").Repeat().ZeroOrOne(),
+			Chars.Digits(),
+			Chars.Digits().Repeat().ZeroOrOne(),
+		).NonCaptured(),
+	).NonCaptured()
+
+	return Group.Define(
+		Group.Define(
+			ipToken,
+			// Numbers are divided by a dot.
+			Chars.Single('.'),
+		).NonCaptured().Repeat().Exactly(3),
+		ipToken,
+	).NonCaptured()
+}

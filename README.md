@@ -157,6 +157,7 @@ rex.Helper.PhoneInternationalE123() // +22 607 123 4567
 rex.Helper.HostnameRFC952() // Hostname by RFC-952 (stricter).
 rex.Helper.HostnameRFC1123() // Hostname by RFC-1123.
 rex.Helper.Email() // Email pattern, don't check RFC 5322 completly, due to high complexity.
+rex.Helper.IPv4() // 127.0.0.1
 ```
 
 ## Examples

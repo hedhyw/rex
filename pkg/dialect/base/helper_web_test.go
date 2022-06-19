@@ -1,11 +1,14 @@
 package base_test
 
 import (
+	"fmt"
+	"net"
 	"strings"
 	"testing"
 
 	"github.com/hedhyw/rex/internal/test"
 	"github.com/hedhyw/rex/pkg/dialect/base"
+	"github.com/hedhyw/rex/pkg/rex"
 )
 
 func getHostnameRFC952ValidTestCases() test.MatchTestCaseSlice {
@@ -151,4 +154,78 @@ func TestEmail(t *testing.T) {
 		getEmailValidTestCases().WithMatched(true),
 		getEmailInvalidTestCases().WithMatched(false),
 	}.Run(t, base.Helper.Email())
+}
+
+func getIPv4ValidTestCases() test.MatchTestCaseSlice {
+	return test.MatchTestCaseSlice{{
+		Name:  "ipv4_local",
+		Value: "127.0.0.1",
+	}, {
+		Name:  "ipv4_zero",
+		Value: "0.0.0.0",
+	}, {
+		Name:  "ipv4_zero",
+		Value: "0.0.0.0",
+	}, {
+		Name:  "ipv4_max",
+		Value: "255.255.255.255",
+	}, {
+		Name:  "ipv4_max",
+		Value: "199.199.199.199",
+	}, {
+		Name:  "ipv4_leading_zero",
+		Value: "009.009.009.009",
+	}, {
+		Name:  "ipv4_google",
+		Value: "172.217.16.46",
+	}, {
+		Name:  "ipv4_private",
+		Value: "192.168.1.1",
+	}}
+}
+
+func getIPv4InvalidTestCases() test.MatchTestCaseSlice {
+	return test.MatchTestCaseSlice{{
+		Name:  "ipv4_max",
+		Value: "256.255.255.255",
+	}, {
+		Name:  "ipv4_three",
+		Value: "255.255.255",
+	}, {
+		Name:  "ipv4_extra_dot",
+		Value: "0.0.0.0.",
+	}, {
+		Name:  "ipv4_300",
+		Value: "255.300.255.255",
+	}}
+}
+
+func TestIPv4(t *testing.T) {
+	test.MatchTestCaseGroupSlice{
+		getIPv4ValidTestCases().WithMatched(true),
+		getIPv4InvalidTestCases().WithMatched(false),
+	}.Run(t, base.Helper.IPv4())
+}
+
+func FuzzIPv4(f *testing.F) {
+	f.Add(255, 255, 255, 255)
+	f.Add(0, 0, 0, 0)
+	f.Add(127, 0, 0, 1)
+	f.Add(256, 0, 0, 0)
+
+	re := rex.New(base.Group.Define(
+		base.Chars.Begin(),
+		base.Group.Define(base.Helper.IPv4()).NonCaptured(),
+		base.Chars.End(),
+	).NonCaptured()).MustCompile()
+
+	f.Fuzz(func(t *testing.T, a int, b int, c int, d int) {
+		fuzzIP := fmt.Sprintf("%d.%d.%d.%d", a, b, c, d)
+
+		expected := net.ParseIP(fuzzIP) != nil
+		actual := re.MatchString(fuzzIP)
+		if expected != actual {
+			t.Errorf("Actual: %v, Expected: %v", actual, expected)
+		}
+	})
 }

@@ -1,3 +1,4 @@
+// nolint: funlen // Unit tests.
 package base_test
 
 import (
@@ -203,6 +204,7 @@ func getIPv4InvalidTestCases() test.MatchTestCaseSlice {
 func TestIPv4(t *testing.T) {
 	test.MatchTestCaseGroupSlice{
 		getIPv4ValidTestCases().WithMatched(true),
+		getIPv6ValidTestCases().WithMatched(false),
 		getIPv4InvalidTestCases().WithMatched(false),
 	}.Run(t, base.Helper.IPv4())
 }
@@ -228,4 +230,147 @@ func FuzzIPv4(f *testing.F) {
 			t.Errorf("Actual: %v, Expected: %v", actual, expected)
 		}
 	})
+}
+
+func getIPv6ValidTestCases() test.MatchTestCaseSlice {
+	return test.MatchTestCaseSlice{{
+		Name:  "ipv6_wiki",
+		Value: "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
+	}, {
+		Name:  "ipv6_pattern_1",
+		Value: "1:2:3:4:5:6:7:8",
+	}, {
+		Name:  "ipv6_pattern_2",
+		Value: "1::",
+	}, {
+		Name:  "ipv6_pattern_3",
+		Value: "1:2:3:4:5:6:7::",
+	}, {
+		Name:  "ipv6_pattern_4",
+		Value: "1::8",
+	}, {
+		Name:  "ipv6_pattern_5",
+		Value: "1:2:3:4:5:6::8",
+	}, {
+		Name:  "ipv6_pattern_6",
+		Value: "1::7:8",
+	}, {
+		Name:  "ipv6_pattern_7",
+		Value: "1:2:3:4:5::7:8",
+	}, {
+		Name:  "ipv6_pattern_8",
+		Value: "1:2:3:4:5::8",
+	}, {
+		Name:  "ipv6_pattern_9",
+		Value: "1::6:7:8",
+	}, {
+		Name:  "ipv6_pattern_10",
+		Value: "1:2:3:4::6:7:8",
+	}, {
+		Name:  "ipv6_pattern_11",
+		Value: "1:2:3:4::8",
+	}, {
+		Name:  "ipv6_pattern_12",
+		Value: "1::7:8",
+	}, {
+		Name:  "ipv6_pattern_13",
+		Value: "1:2:3:4:5::7:8",
+	}, {
+		Name:  "ipv6_pattern_14",
+		Value: "1:2:3:4:5::8",
+	}, {
+		Name:  "ipv6_pattern_15",
+		Value: "1::6:7:8",
+	}, {
+		Name:  "ipv6_pattern_16",
+		Value: "1:2:3:4::6:7:8",
+	}, {
+		Name:  "ipv6_pattern_17",
+		Value: "1:2:3:4::8",
+	}, {
+		Name:  "ipv6_pattern_18",
+		Value: "1::5:6:7:8",
+	}, {
+		Name:  "ipv6_pattern_19",
+		Value: "1:2:3::5:6:7:8",
+	}, {
+		Name:  "ipv6_pattern_20",
+		Value: "1:2:3::8",
+	}, {
+		Name:  "ipv6_pattern_21",
+		Value: "1::4:5:6:7:8",
+	}, {
+		Name:  "ipv6_pattern_22",
+		Value: "1:2::4:5:6:7:8",
+	}, {
+		Name:  "ipv6_pattern_23",
+		Value: "1:2::8",
+	}, {
+		Name:  "ipv6_pattern_24",
+		Value: "1::3:4:5:6:7:8",
+	}, {
+		Name:  "ipv6_pattern_25",
+		Value: "1::8",
+	}, {
+		Name:  "ipv6_pattern_26",
+		Value: "::2:3:4:5:6:7:8",
+	}, {
+		Name:  "ipv6_pattern_27",
+		Value: "::8",
+	}, {
+		Name:  "ipv6_pattern_28",
+		Value: "::",
+	}, {
+		Name:  "ipv6_pattern_29",
+		Value: "fe80::7:8%eth0",
+	}, {
+		Name:  "ipv6_pattern_30",
+		Value: "fe80::7:8%1",
+	}, {
+		Name:  "ipv6_pattern_31",
+		Value: "::255.255.255.255",
+	}, {
+		Name:  "ipv6_pattern_32",
+		Value: "::ffff:255.255.255.255",
+	}, {
+		Name:  "ipv6_pattern_33",
+		Value: "::ffff:0:255.255.255.255",
+	}, {
+		Name:  "ipv6_pattern_34",
+		Value: "2001:db8:3:4::192.0.2.33",
+	}, {
+		Name:  "ipv6_pattern_35",
+		Value: "64:ff9b::192.0.2.33",
+	}}
+}
+
+func getIPv6InvalidTestCases() test.MatchTestCaseSlice {
+	return test.MatchTestCaseSlice{{
+		Name:  "ipv6_not_hex",
+		Value: "G001:0db8:85a3:0000:0000:8a2e:0370:7334",
+	}, {
+		Name:  "ipv6_invalid_ip",
+		Value: "::ffff:0:256.255.255.255",
+	}, {
+		Name:  "ipv6_ipv4",
+		Value: "225.1.4.2",
+	}, {
+		Name:  "ipv6_count_tokens",
+		Value: "fe80:2030:31:24",
+	}}
+}
+
+func TestIPv6(t *testing.T) {
+	test.MatchTestCaseGroupSlice{
+		getIPv6ValidTestCases().WithMatched(true),
+		getIPv4ValidTestCases().WithMatched(false),
+		getIPv6InvalidTestCases().WithMatched(false),
+	}.Run(t, base.Helper.IPv6())
+}
+
+func TestIP(t *testing.T) {
+	test.MatchTestCaseGroupSlice{
+		getIPv6ValidTestCases().WithMatched(true),
+		getIPv4ValidTestCases().WithMatched(true),
+	}.Run(t, base.Helper.IP())
 }

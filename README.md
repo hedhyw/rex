@@ -147,6 +147,7 @@ rex.Group.Define(rex.Chars.Single('a')).Repeat().OneOrMore() // (a)+
 ## Helper
 
 Common regular expression patters that are ready to use.
+> These patterns are likely to be changed in new versions.
 
 ```golang
 rex.Helper.Phone() // Combines PhoneE164 and PhoneE123.
@@ -157,7 +158,9 @@ rex.Helper.PhoneInternationalE123() // +22 607 123 4567
 rex.Helper.HostnameRFC952() // Hostname by RFC-952 (stricter).
 rex.Helper.HostnameRFC1123() // Hostname by RFC-1123.
 rex.Helper.Email() // Email pattern, don't check RFC 5322 completly, due to high complexity.
+rex.Helper.IP()   // IPv4 or IPv6.
 rex.Helper.IPv4() // 127.0.0.1
+rex.Helper.IPv6() // 2001:0db8:85a3:0000:0000:8a2e:0370:7334
 ```
 
 ## Examples
@@ -258,4 +261,4 @@ submatches := re.FindAllStringSubmatch(text, -1)
 
 #### More examples
 
-More examples can be found here: [pkg/rex/examples_test.go](pkg/rex/examples_test.go).
+More examples can be found here: [examples_test.go](examples_test.go).

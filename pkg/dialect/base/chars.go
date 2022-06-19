@@ -179,7 +179,7 @@ func (CharsBaseDialect) Range(from rune, to rune) ClassToken {
 // Regex: `r`, `\\xHEX_CODE`, or  `\\x{HEX_CODE}`.
 func (CharsBaseDialect) Single(r rune) ClassToken {
 	// Minus can be a special case in classes.
-	if r < unicode.MaxASCII && r != '-' {
+	if r < unicode.MaxASCII && unicode.IsPrint(r) && r != '-' && r != '%' {
 		return newClassToken(
 			helper.StringToken(regexp.QuoteMeta(string(r))),
 		).withoutBrackets()

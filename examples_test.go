@@ -334,3 +334,64 @@ func Example_compositeInReadme() {
 	// 123: true
 	// hello.123: false
 }
+
+func Example_emailMatch() {
+	re := rex.New(
+		rex.Chars.Begin(),
+		rex.Helper.Email(),
+		rex.Chars.End(),
+	).MustCompile()
+
+	fmt.Println("regular expression:", re.String())
+	fmt.Println("example@example.com:", re.MatchString("example@example.com"))
+	fmt.Println("@example.com:", re.MatchString("@example.com"))
+
+	// Output:
+	// regular expression: ^(?:(?:[[:alnum:]!#\$\x25&'\*\+\x2D/=\?\^_`\{\|\}~](?:[[:alnum:]!#\$\x25&'\*\+\x2D/=\?\^_`\{\|\}~\.]?[[:alnum:]!#\$\x25&'\*\+\x2D/=\?\^_`\{\|\}~]){0,31})@(?:[[:alnum:]][[:alnum:]\x2D]{0,62}(?:\.*[[:alnum:]][[:alnum:]\x2D]{0,62})*[[:alnum:]]))$
+	// example@example.com: true
+	// @example.com: false
+}
+
+func Example_emailFind() {
+	re := rex.New(
+		rex.Group.Define(
+			rex.Helper.Email(),
+		).WithName("email"),
+	).MustCompile()
+
+	const text = `
+	Duyen: duyen@example.com
+	Rex:   rex@rex.example.com
+	`
+
+	fmt.Println("regular expression:", re.String())
+	submatches := re.FindAllStringSubmatch(text, -1)
+
+	for i, sub := range submatches {
+		fmt.Printf("submatches[%d]: %s\n", i, sub[0])
+	}
+
+	// Output:
+	// regular expression: (?P<email>(?:(?:[[:alnum:]!#\$\x25&'\*\+\x2D/=\?\^_`\{\|\}~](?:[[:alnum:]!#\$\x25&'\*\+\x2D/=\?\^_`\{\|\}~\.]?[[:alnum:]!#\$\x25&'\*\+\x2D/=\?\^_`\{\|\}~]){0,31})@(?:[[:alnum:]][[:alnum:]\x2D]{0,62}(?:\.*[[:alnum:]][[:alnum:]\x2D]{0,62})*[[:alnum:]])))
+	// submatches[0]: duyen@example.com
+	// submatches[1]: rex@rex.example.com
+}
+
+func Example_ipv4Match() {
+	re := rex.New(
+		rex.Chars.Begin(),
+		rex.Helper.IPv4(),
+		rex.Chars.End(),
+	).MustCompile()
+
+	fmt.Println("regular expression:", re.String())
+	fmt.Println("127.0.0.1:", re.MatchString("127.0.0.1"))
+	fmt.Println("172.217.16.14:", re.MatchString("172.217.16.14"))
+	fmt.Println("github.com:", re.MatchString("github.com"))
+
+	// Output:
+	// regular expression: ^(?:(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:[01]?\d\d?))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:[01]?\d\d?)))$
+	// 127.0.0.1: true
+	// 172.217.16.14: true
+	// github.com: false
+}

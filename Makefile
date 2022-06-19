@@ -14,6 +14,11 @@ test:
 	go tool cover -func=coverage.out
 .PHONY: test
 
+test.fuzz:
+	# make test.fuzz NAME=FuzzIPv4
+	go test -fuzz $(NAME) "github.com/hedhyw/rex/pkg/dialect/base"
+.PHONY: test.fuzz
+
 tidy:
 	go mod tidy
 .PHONY: vendor

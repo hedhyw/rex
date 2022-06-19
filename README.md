@@ -1,4 +1,4 @@
-# Rex [work in progress]
+# Rex
 
 ![Version](https://img.shields.io/github/v/tag/hedhyw/rex)
 [![Go Report Card](https://goreportcard.com/badge/github.com/hedhyw/rex)](https://goreportcard.com/report/github.com/hedhyw/rex)
@@ -147,6 +147,7 @@ rex.Group.Define(rex.Chars.Single('a')).Repeat().OneOrMore() // (a)+
 ## Helper
 
 Common regular expression patters that are ready to use.
+> ⚠️ These patterns are likely to be changed in new versions.
 
 ```golang
 rex.Helper.Phone() // Combines PhoneE164 and PhoneE123.
@@ -154,6 +155,15 @@ rex.Helper.PhoneE164() // +155555555
 rex.Helper.PhoneE123() // Combines PhoneNationalE123 and PhoneInternationalE123.
 rex.Helper.PhoneNationalE123() // (607) 123 4567
 rex.Helper.PhoneInternationalE123() // +22 607 123 4567
+rex.Helper.HostnameRFC952() // Hostname by RFC-952 (stricter).
+rex.Helper.HostnameRFC1123() // Hostname by RFC-1123.
+rex.Helper.Email() // Unquoted email pattern, it doesn't check RFC 5322 completely, due to high complexity.
+rex.Helper.IP()   // IPv4 or IPv6.
+rex.Helper.IPv4() // 127.0.0.1
+rex.Helper.IPv6() // 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+rex.Helper.MD5Hex() // d41d8cd98f00b204e9800998ecf8427e
+rex.Helper.SHA1Hex() // da39a3ee5e6b4b0d3255bfef95601890afd80709
+rex.Helper.SHA256Hex() // e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 ```
 
 ## Examples
@@ -230,7 +240,7 @@ re.MatchString("123")       // true
 re.MatchString("hello.123") // false
 ```
 
-## Example groups usage.
+## Example groups usage
 
 ```golang
 re := rex.New(
@@ -254,4 +264,4 @@ submatches := re.FindAllStringSubmatch(text, -1)
 
 #### More examples
 
-More examples can be found here: [pkg/rex/examples_test.go](pkg/rex/examples_test.go).
+More examples can be found here: [examples_test.go](examples_test.go).

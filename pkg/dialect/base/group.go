@@ -73,7 +73,8 @@ func (gt GroupToken) WithName(name string) GroupToken {
 }
 
 // NonCaptured marks group as non-captured. It means that this group
-// will not be included in group submatch results.
+// will not be included in group submatch results. Use this for optimizing
+// regular expressions if you don't need captured result.
 //
 // It overrides name if set.
 func (gt GroupToken) NonCaptured() GroupToken {

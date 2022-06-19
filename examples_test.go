@@ -376,3 +376,22 @@ func Example_emailFind() {
 	// submatches[0]: duyen@example.com
 	// submatches[1]: rex@rex.example.com
 }
+
+func Example_ipv4Match() {
+	re := rex.New(
+		rex.Chars.Begin(),
+		rex.Helper.IPv4(),
+		rex.Chars.End(),
+	).MustCompile()
+
+	fmt.Println("regular expression:", re.String())
+	fmt.Println("127.0.0.1:", re.MatchString("127.0.0.1"))
+	fmt.Println("172.217.16.14:", re.MatchString("172.217.16.14"))
+	fmt.Println("github.com:", re.MatchString("github.com"))
+
+	// Output:
+	// regular expression: ^(?:(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:[01]?\d\d?))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:[01]?\d\d?)))$
+	// 127.0.0.1: true
+	// 172.217.16.14: true
+	// github.com: false
+}

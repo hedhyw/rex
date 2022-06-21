@@ -183,10 +183,10 @@ func Example_group() {
 func Example_groupNonCapturing() {
 	re := rex.New(
 		rex.Chars.Any().Repeat().ZeroOrMore(),
-		rex.Group.Define(
+		rex.Group.NonCaptured(
 			rex.Chars.Digits().Repeat().OneOrMore(),
 			rex.Chars.Single('a'),
-		).NonCaptured(),
+		),
 	).MustCompile()
 
 	fmt.Println("regular expression:", re.String())
@@ -390,7 +390,7 @@ func Example_ipv4Match() {
 	fmt.Println("github.com:", re.MatchString("github.com"))
 
 	// Output:
-	// regular expression: ^(?:(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:[01]?\d\d?))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:[01]?\d\d?)))$
+	// regular expression: ^(?:(?:((?:25[0-5])|(?:2[0-4]\d)|(?:[01]?\d\d?))\.){3}((?:25[0-5])|(?:2[0-4]\d)|(?:[01]?\d\d?)))$
 	// 127.0.0.1: true
 	// 172.217.16.14: true
 	// github.com: false

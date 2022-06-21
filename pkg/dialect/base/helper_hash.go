@@ -24,7 +24,7 @@ func (h HelperDialect) SHA256Hex() dialect.Token {
 }
 
 func (HelperDialect) hex(length int) dialect.Token {
-	return Group.Define(
+	return Group.NonCaptured(
 		Chars.HexDigits().Repeat().Exactly(length),
-	).NonCaptured()
+	)
 }

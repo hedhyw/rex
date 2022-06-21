@@ -26,14 +26,14 @@ func (h HelperDialect) Phone() dialect.Token {
 //
 // Example: +15555555.
 func (HelperDialect) PhoneE164() dialect.Token {
-	return Group.Define(
+	return Group.NonCaptured(
 		// Country code.
 		Chars.Single('+'),
 		// There is no country code that starts with zero.
 		Chars.Range('1', '9'),
 		// 7...14 digits.
 		Chars.Digits().Repeat().Between(7, 14),
-	).NonCaptured()
+	)
 }
 
 // PhoneE123 is a patter for E.123, it is an international standard by
@@ -84,7 +84,7 @@ func (HelperDialect) PhoneNationalE123() dialect.Token {
 //
 // Example: +22 607 123 4567.
 func (HelperDialect) PhoneInternationalE123() dialect.Token {
-	return Group.Define(
+	return Group.NonCaptured(
 		// Country code.
 		Chars.Single('+'),
 		// There is no country code that starts with zero.
@@ -99,5 +99,5 @@ func (HelperDialect) PhoneInternationalE123() dialect.Token {
 
 		Chars.Whitespace(),
 		Chars.Digits().Repeat().Exactly(4),
-	).NonCaptured()
+	)
 }

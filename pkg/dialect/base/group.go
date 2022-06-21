@@ -20,6 +20,12 @@ func (GroupBaseDialect) Define(tokens ...dialect.Token) GroupToken {
 	}
 }
 
+// NonCaptured defines a group as a non-captured. It is a synonym to
+// Group.Define(...).NonCaptured().
+func (g GroupBaseDialect) NonCaptured(tokens ...dialect.Token) GroupToken {
+	return g.Define(tokens...).NonCaptured()
+}
+
 // Composite defines logical "OR" between tokens. It can be used for
 // matching one of given expression. It creates non-captured group.
 func (GroupBaseDialect) Composite(tokens ...dialect.Token) GroupToken {

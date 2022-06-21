@@ -55,11 +55,11 @@ type MatchTestCaseGroupSlice [][]MatchTestCase
 func (tcs MatchTestCaseGroupSlice) Run(t *testing.T, tokens ...dialect.Token) {
 	t.Parallel()
 
-	re := rex.New(base.Group.Define(
+	re := rex.New(base.Group.NonCaptured(
 		base.Chars.Begin(),
-		base.Group.Define(tokens...).NonCaptured(),
+		base.Group.NonCaptured(tokens...),
 		base.Chars.End(),
-	).NonCaptured()).MustCompile()
+	)).MustCompile()
 
 	for _, g := range tcs {
 		for _, tc := range g {

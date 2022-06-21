@@ -215,11 +215,11 @@ func FuzzIPv4(f *testing.F) {
 	f.Add(127, 0, 0, 1)
 	f.Add(256, 0, 0, 0)
 
-	re := rex.New(base.Group.Define(
+	re := rex.New(base.Group.NonCaptured(
 		base.Chars.Begin(),
-		base.Group.Define(base.Helper.IPv4()).NonCaptured(),
+		base.Group.NonCaptured(base.Helper.IPv4()),
 		base.Chars.End(),
-	).NonCaptured()).MustCompile()
+	)).MustCompile()
 
 	f.Fuzz(func(t *testing.T, a int, b int, c int, d int) {
 		fuzzIP := fmt.Sprintf("%d.%d.%d.%d", a, b, c, d)

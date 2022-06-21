@@ -13,19 +13,19 @@ import (
 // The first character must be an alpha character. The last character
 // must not be a minus sign or period.
 func (HelperDialect) HostnameRFC952() dialect.Token {
-	return Group.Define(
+	return Group.NonCaptured(
 		// Cannot start with a number or '-'.
 		Chars.Alphabetic(),
-		Group.Define(
+		Group.NonCaptured(
 			Common.Class(
 				Chars.Alphanumeric(),
 				Chars.Single('-'),
 			).Repeat().OneOrMore(),
 			Chars.Single('.').Repeat().ZeroOrMore(),
-		).NonCaptured().Repeat().ZeroOrMore(),
+		).Repeat().ZeroOrMore(),
 		// Cannot end with a '-' or '.'.
 		Chars.Alphanumeric().Repeat().OneOrMore(),
-	).NonCaptured()
+	)
 }
 
 // HostnameRFC1123 is a pattern like HostnameRFC952, but the restriction
@@ -37,16 +37,16 @@ func (HelperDialect) HostnameRFC1123() dialect.Token {
 		Chars.Single('-'),
 	)
 
-	return Group.Define(
+	return Group.NonCaptured(
 		Chars.Alphanumeric(),
 		alphanumericWithMinus.Repeat().Between(0, 62),
-		Group.Define(
+		Group.NonCaptured(
 			Chars.Single('.').Repeat().ZeroOrMore(),
 			Chars.Alphanumeric(),
 			alphanumericWithMinus.Repeat().Between(0, 62),
-		).NonCaptured().Repeat().ZeroOrMore(),
+		).Repeat().ZeroOrMore(),
 		Chars.Alphanumeric(),
-	).NonCaptured()
+	)
 }
 
 // Email is a pattern, that checks <local_part>@<host_name>.
@@ -64,10 +64,10 @@ func (h HelperDialect) Email() dialect.Token {
 		Chars.Runes("!#$%&'*+-/=?^_`{|}~"),
 	)
 
-	unquotedLocalPart := Group.Define(
+	unquotedLocalPart := Group.NonCaptured(
 		// Email must not start with a dot.
 		localCharsWithoutDot,
-		Group.Define(
+		Group.NonCaptured(
 			// A dot must not appear consecutively, for this wrap non-dot
 			// tokens around.
 			Common.Class(
@@ -75,14 +75,14 @@ func (h HelperDialect) Email() dialect.Token {
 				Chars.Single('.'),
 			).Repeat().ZeroOrOne(),
 			localCharsWithoutDot,
-		).NonCaptured().Repeat().Between(0, 31),
-	).NonCaptured()
+		).Repeat().Between(0, 31),
+	)
 
-	return Group.Define(
+	return Group.NonCaptured(
 		unquotedLocalPart,
 		Chars.Single('@'),
 		h.HostnameRFC1123(),
-	).NonCaptured()
+	)
 }
 
 // IP is a pattern for IPv4 or IPv6.
@@ -98,30 +98,30 @@ func (h HelperDialect) IP() dialect.Token {
 func (HelperDialect) IPv4() dialect.Token {
 	ipv4Octet := Group.Composite(
 		// One of 250-255 | 200-249 | 0-199.
-		Group.Define( // 250-255.
+		Group.NonCaptured( // 250-255.
 			Common.Text("25"),
 			Chars.Range('0', '5'),
-		).NonCaptured(),
-		Group.Define( // 200-249.
+		),
+		Group.NonCaptured( // 200-249.
 			Chars.Single('2'),
 			Chars.Range('0', '4'),
 			Chars.Digits(),
-		).NonCaptured(),
-		Group.Define( // 000-199.
+		),
+		Group.NonCaptured( // 000-199.
 			Chars.Runes("01").Repeat().ZeroOrOne(),
 			Chars.Digits(),
 			Chars.Digits().Repeat().ZeroOrOne(),
-		).NonCaptured(),
-	).NonCaptured()
+		),
+	)
 
-	return Group.Define(
-		Group.Define(
+	return Group.NonCaptured(
+		Group.NonCaptured(
 			ipv4Octet,
 			// Numbers are divided by a dot.
 			Chars.Single('.'),
-		).NonCaptured().Repeat().Exactly(3),
+		).Repeat().Exactly(3),
 		ipv4Octet,
-	).NonCaptured()
+	)
 }
 
 // IPv6 is a pattern for IPv6 (Normal) address that has the following format:
@@ -132,68 +132,68 @@ func (HelperDialect) IPv4() dialect.Token {
 func (h HelperDialect) IPv6() dialect.Token {
 	ipv6Segment := Chars.HexDigits().Repeat().Between(1, 4)
 	delimeter := Chars.Single(':')
-	ipv6SegmentDelimeter := Group.Define(
+	ipv6SegmentDelimeter := Group.NonCaptured(
 		ipv6Segment,
 		delimeter,
-	).NonCaptured()
-	delimeterIPv6Segment := Group.Define(
+	)
+	delimeterIPv6Segment := Group.NonCaptured(
 		delimeter,
 		ipv6Segment,
-	).NonCaptured()
+	)
 
 	return Group.Composite(
-		Group.Define(
+		Group.NonCaptured(
 			// 1:2:3:4:5:6:7:8
 			ipv6SegmentDelimeter.Repeat().Exactly(7),
 			ipv6Segment,
-		).NonCaptured(),
-		Group.Define(
+		),
+		Group.NonCaptured(
 			// 1::
 			// 1:2:3:4:5:6:7::
 			ipv6SegmentDelimeter.Repeat().Between(1, 7),
 			delimeter,
-		).NonCaptured(),
-		Group.Define(
+		),
+		Group.NonCaptured(
 			// 1::8
 			// 1:2:3:4:5:6::8
 			ipv6SegmentDelimeter.Repeat().Between(1, 6),
 			delimeterIPv6Segment,
-		).NonCaptured(),
+		),
 		Group.Define(
 			// 1::7:8
 			// 1:2:3:4:5::7:8
 			// 1:2:3:4:5::8
 			ipv6SegmentDelimeter.Repeat().Between(1, 5),
 			delimeterIPv6Segment.Repeat().Between(1, 2),
-		).NonCaptured(),
-		Group.Define(
+		),
+		Group.NonCaptured(
 			// 1::6:7:8
 			// 1:2:3:4::6:7:8
 			// 1:2:3:4::8
 			ipv6SegmentDelimeter.Repeat().Between(1, 4),
 			delimeterIPv6Segment.Repeat().Between(1, 3),
-		).NonCaptured(),
-		Group.Define(
+		),
+		Group.NonCaptured(
 			// 1::5:6:7:8
 			// 1:2:3::5:6:7:8
 			// 1:2:3::8
 			ipv6SegmentDelimeter.Repeat().Between(1, 3),
 			delimeterIPv6Segment.Repeat().Between(1, 4),
-		).NonCaptured(),
-		Group.Define(
+		),
+		Group.NonCaptured(
 			// 1::4:5:6:7:8
 			// 1:2::4:5:6:7:8
 			// 1:2::8
 			ipv6SegmentDelimeter.Repeat().Between(1, 2),
 			delimeterIPv6Segment.Repeat().Between(1, 5),
-		).NonCaptured(),
-		Group.Define(
+		),
+		Group.NonCaptured(
 			// 1::3:4:5:6:7:8
 			// 1::8
 			ipv6SegmentDelimeter,
 			delimeterIPv6Segment.Repeat().Between(1, 6),
-		).NonCaptured(),
-		Group.Define(
+		),
+		Group.NonCaptured(
 			// ::2:3:4:5:6:7:8
 			// ::8
 			// ::
@@ -202,45 +202,45 @@ func (h HelperDialect) IPv6() dialect.Token {
 				delimeterIPv6Segment.Repeat().Between(1, 7),
 				// Or.
 				delimeter,
-			),
-		).NonCaptured(),
-		Group.Define(
+			).NonCaptured(),
+		),
+		Group.NonCaptured(
 			// fe80::7:8%eth0
 			// fe80::7:8%1
 			// (link-local IPv6 addresses with zone index)
 			Group.Composite(
 				Common.Text("fe"),
 				Common.Text("FE"),
-			),
+			).NonCaptured(),
 			Common.Text("80"),
 			delimeter,
 			delimeterIPv6Segment.Repeat().Between(0, 4),
 			Chars.Single('%'),
 			Chars.Alphanumeric().Repeat().OneOrMore(),
-		).NonCaptured(),
-		Group.Define(
+		),
+		Group.NonCaptured(
 			// ::255.255.255.255
 			// ::ffff:255.255.255.255
 			// ::ffff:0:255.255.255.255
 			// (IPv4-mapped IPv6 addresses and IPv4-translated addresses).
 			delimeter.Repeat().Exactly(2),
-			Group.Define(
+			Group.NonCaptured(
 				Chars.Runes("fF").Repeat().Exactly(4),
-				Group.Define(
+				Group.NonCaptured(
 					delimeter,
 					Chars.Single('0').Repeat().Between(1, 4),
-				).NonCaptured().Repeat().ZeroOrOne(),
+				).Repeat().ZeroOrOne(),
 				delimeter,
-			).NonCaptured().Repeat().ZeroOrOne(),
+			).Repeat().ZeroOrOne(),
 			h.IPv4(),
-		).NonCaptured(),
-		Group.Define(
+		),
+		Group.NonCaptured(
 			// 2001:db8:3:4::192.0.2.33
 			// 64:ff9b::192.0.2.33
 			// (IPv4-Embedded IPv6 Address).
 			ipv6SegmentDelimeter.Repeat().Between(1, 4),
 			delimeter,
 			h.IPv4(),
-		).NonCaptured(),
-	).NonCaptured()
+		),
+	)
 }

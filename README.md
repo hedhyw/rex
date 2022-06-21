@@ -115,9 +115,9 @@ rex.Group.Define(rex.Chars.Single('a'), rex.Chars.Single('b')) // (ab)
 // A group that defines "OR" condition for given expressions.
 // Example: "a" or "rex", ...
 rex.Group.Composite(rex.Chars.Single('a'), rex.Common.Text("rex")) // (?:a|rex)
-
 // Define non-captured group. The result will not be captured.
-rex.Group.Define(rex.Chars.Single('a')).NonCaptured() // (?:a)
+rex.Group.NonCaptured(rex.Chars.Single('a')) // (?:a)
+
 // Define a group with a name.
 rex.Group.Define(rex.Chars.Single('a')).WithName("my_name") // (?P<my_name>a)
 ```

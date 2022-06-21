@@ -8,6 +8,7 @@ import (
 	"github.com/hedhyw/rex/pkg/dialect/base"
 )
 
+// nolint: funlen // Unit test.
 func TestRexGroup(t *testing.T) {
 	test.RexTestCasesSlice{{
 		Name: "GroupSingle",
@@ -39,6 +40,12 @@ func TestRexGroup(t *testing.T) {
 		Expected: ``,
 	}, {
 		Name: "GroupNonCaptured",
+		Chain: []dialect.Token{
+			base.Group.NonCaptured(base.Chars.Single('a')),
+		},
+		Expected: `(?:a)`,
+	}, {
+		Name: "GroupNonCapturedMark",
 		Chain: []dialect.Token{
 			base.Group.Define(base.Chars.Single('a')).NonCaptured(),
 		},

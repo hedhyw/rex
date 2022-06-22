@@ -87,7 +87,7 @@ func (tc numberRangeTestCase) assert(tb testing.TB, n int64) {
 	}
 }
 
-func FuzzRangeNUmber(f *testing.F) {
+func FuzzRangeNumber(f *testing.F) {
 	f.Add(int32(0), int32(100), int64(50))
 	f.Add(int32(0), int32(100), int64(-1))
 	f.Add(int32(0), int32(100), int64(101))

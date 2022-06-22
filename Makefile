@@ -19,7 +19,7 @@ test:
 
 test.fuzz:
 	# make test.fuzz NAME=FuzzIPv4
-	# make test.fuzz NAME=FuzzRangeNUmber
+	# make test.fuzz NAME=FuzzRangeNumber
 	go test -fuzz $(NAME) "github.com/hedhyw/rex/pkg/dialect/base"
 .PHONY: test.fuzz
 

@@ -35,6 +35,42 @@ func TestNumberRange_base(t *testing.T) {
 	newNumberRangeTestCase(math.MaxInt32-20, math.MaxInt32-10).Run(t, 1000)
 }
 
+func TestNumberRange_leadingZeros(t *testing.T) {
+	t.Parallel()
+
+	reNoLeading := rex.New(
+		base.Chars.Begin(),
+		base.Helper.NumberRange(1, 100),
+		base.Chars.End(),
+	).MustCompile()
+
+	reLeading := rex.New(
+		base.Chars.Begin(),
+		base.Group.NonCaptured(
+			base.Chars.Single('0').Repeat().ZeroOrMore(),
+			base.Helper.NumberRange(1, 100),
+		),
+		base.Chars.End(),
+	).MustCompile()
+
+	switch {
+	case !reNoLeading.MatchString("1"):
+		t.Fatal("no leading: 1")
+	case reNoLeading.MatchString("001"):
+		t.Fatal("no leading: 001")
+	case reNoLeading.MatchString("101"):
+		t.Fatal("no leading: 101")
+	case !reLeading.MatchString("099"):
+		t.Fatal("leading 099")
+	case !reLeading.MatchString("000099"):
+		t.Fatal("leading 000099")
+	case !reLeading.MatchString("99"):
+		t.Fatal("leading: 99")
+	case reLeading.MatchString("101"):
+		t.Fatal("leading: 101")
+	}
+}
+
 type numberRangeTestCase struct {
 	from int32
 	to   int32

@@ -219,24 +219,6 @@ re := rex.New(
 ).MustCompile()
 ```
 
-#### Raw regular expression
-
-```golang
-rex.New(
-    rex.Chars.Begin(), // `^`
-    rex.Common.Raw("[a-zA-Z0-9]+"), // `[a-zA-Z0-9]+`
-    rex.Chars.Single('@'), // `@`
-    rex.Common.Raw("[a-zA-Z0-9]+"), // `[a-zA-Z0-9]+`
-    rex.Chars.End(), // `$`
-).MustCompile()
-
-// Or even!
-
-rex.New(
-    rex.Common.Raw(`^[a-zA-Z\d]+@[a-zA-Z\d]+\.[a-zA-Z\d]{2,3}$`),
-).MustCompile()
-```
-
 #### Simple composite
 
 ```golang
@@ -257,7 +239,7 @@ re.MatchString("123")       // true
 re.MatchString("hello.123") // false
 ```
 
-## Example groups usage
+## Example match usage
 
 ```golang
 re := rex.New(

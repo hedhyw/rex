@@ -23,7 +23,7 @@ It is just a builder, so it returns standart [`*regexp.Regexp`](https://pkg.go.d
 
 The library supports [groups](_docs/library.md#groups), [composits](_docs/library.md#groups), [classes](_docs/library.md#character-classes), [flags](_docs/library.md#flags), [repetitions](_docs/library.md#repetitions) and if you want you can even use `raw regular expressions` in any place. Also it contains a set of [predefined helpers](_docs/library.md#helper) with patterns for number ranges, phones, emails, etc...
 
-Let's see an example of validating or matching `some_id[#]` using verbose patterns:
+Let's see an example of validating or matching `someid[#]` using a verbose pattern:
 ```golang
 re := rex.New(
     rex.Chars.Begin(), // `^`
@@ -63,7 +63,7 @@ re := rex.New(
 // ^((?:\x2D(?:0|(?:[1-9])|(?:[1-9][0-9])|(?:10[0-9])|(?:11[0-1])))|(?:0|(?:[1-9])|(?:[1-9][0-9])|(?:[1-9][0-9][0-9])|(?:10[0-9][0-9])|(?:110[0-9])|(?:111[0-1])))\.[0-9]{2}$
 ```
 
-**The style you prefer is up to you.**
+> The style you prefer is up to you.
 
 ## Meme
 
@@ -103,7 +103,7 @@ re := rex.New(
 
 3. **Is it language-dependent? Is it transferable to other languages?**
 
-   We can use this library only in Go. If you want to use any part
+   We can use this library only in Go. If you want to use any parts
    in other places, then just call `rex.New(...).String()` and copy-paste
    generated regular expression.
 
@@ -113,7 +113,19 @@ re := rex.New(
    of this library are easy to use out of the box. Also, it is easier
    to create custom parameterized helpers.
 
-5. **I have another question. I found an issue. I have a feature request.**
+5. **Is it stable?**
+
+   It is `0.X.Y` version, but there are some backward compatibility guarantees:
+   - `rex.Chars` helpers can change output to an alternative synonym.
+   - `rex.Common` helpers can be deprecated, but not removed.
+   - `rex.Group` some methods can be deprecated.
+   - `rex.Helper` can be changed with breaking changes due to specification complexities.
+   - The test coverage should be `~100%` without covering [test helpers](internal/test/test.go).
+   - Any breaking change will be prevented as much as possible.
+
+   _All of the above may not be respected when upgrading the major version._
+
+6. **I have another question. I found an issue. I have a feature request. I want to contribute.**
 
    Please, [create an issue](https://github.com/hedhyw/rex/issues/new?labels=question&title=I+have+a+question).
 

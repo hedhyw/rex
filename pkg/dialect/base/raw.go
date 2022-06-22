@@ -39,13 +39,15 @@ func (rt RawToken) WriteTo(w dialect.StringByteWriter) (n int, err error) {
 // removeComment removes everythong after '#' if it is not escaped by
 // backslash '\#' or it is not in the character class '[#]'.
 //
-// Example:
-// .+\#[#] # comment
-// Will return
-// .+\#[#]
+// This input:
+//   .+\#[#] # comment
+// Will be converted to:
+//   .+\#[#]
 func removeComment(val string) string {
-	var backslash bool
-	var characterClass bool
+	var (
+		backslash      bool
+		characterClass bool
+	)
 
 	for i, ch := range val {
 		switch ch {
@@ -66,6 +68,7 @@ func removeComment(val string) string {
 				characterClass = false
 			}
 		}
+
 		backslash = false
 	}
 

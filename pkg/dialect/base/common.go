@@ -17,7 +17,20 @@ const Common CommonBaseDialect = "CommonBaseDialect"
 
 // Raw appends regular expression as is.
 func (CommonBaseDialect) Raw(raw string) RawToken {
-	return RawToken{value: raw}
+	return RawToken{value: raw, verbose: true}
+}
+
+// RawVerbose appends regular expression and removes comments, spaces and new lines.
+//
+// When a line contains a # that is not in a character class and is not
+// preceded by an unescaped backslash, all characters from the leftmost
+// such # through the end of the line are ignored.
+//
+// Leading and trailling whitespaces are ignored.
+//
+// It also ignores all new lines.
+func (CommonBaseDialect) RawVerbose(raw string) RawToken {
+	return RawToken{value: raw, verbose: true}
 }
 
 // Text appends the text, and escapes all regular expression metacharacters.

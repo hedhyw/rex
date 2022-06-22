@@ -19,3 +19,55 @@ func TestRexRaw(t *testing.T) {
 		Expected: `[A-Z]`,
 	}}.Run(t)
 }
+
+func TestRexRawVerbose(t *testing.T) {
+	test.RexTestCasesSlice{{
+		Name: "RawVerboseRegular",
+		Chain: []dialect.Token{
+			base.Common.RawVerbose(`.+`),
+		},
+		Expected: `.+`,
+	}, {
+		Name: "RawVerboseComment",
+		Chain: []dialect.Token{
+			base.Common.RawVerbose(`.+ # any character`),
+		},
+		Expected: `.+`,
+	}, {
+		Name: "RawVerboseMultiline",
+		Chain: []dialect.Token{
+			base.Common.RawVerbose(`
+			.+ # any character
+			\d+ # Digits
+			`),
+		},
+		Expected: `.+\d+`,
+	}, {
+		Name: "RawVerboseEscapedHashSign",
+		Chain: []dialect.Token{
+			base.Common.RawVerbose(`\#\d+ # Digits`),
+		},
+		Expected: `#\d+`,
+	}, {
+		Name: "RawVerboseEscapedHashInClass",
+		Chain: []dialect.Token{
+			base.Common.RawVerbose(`[#]\d+ # Digits`),
+		},
+		Expected: `[#]\d+`,
+	}, {
+		Name: "RawVerboseEscapedRegularExpressionInComment",
+		Chain: []dialect.Token{
+			base.Common.RawVerbose(`[#]\d+ # [Hi].+`),
+		},
+		Expected: `[#]\d+`,
+	}, {
+		Name: "RawVerboseEscapedNoCommentMultiline",
+		Chain: []dialect.Token{
+			base.Common.RawVerbose(`
+			.+
+			\d+
+			`),
+		},
+		Expected: `.+\d+`,
+	}}.Run(t)
+}

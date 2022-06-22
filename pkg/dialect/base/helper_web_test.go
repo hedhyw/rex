@@ -174,9 +174,6 @@ func getIPv4ValidTestCases() test.MatchTestCaseSlice {
 		Name:  "ipv4_max",
 		Value: "199.199.199.199",
 	}, {
-		Name:  "ipv4_leading_zero",
-		Value: "009.009.009.009",
-	}, {
 		Name:  "ipv4_google",
 		Value: "172.217.16.46",
 	}, {
@@ -198,6 +195,9 @@ func getIPv4InvalidTestCases() test.MatchTestCaseSlice {
 	}, {
 		Name:  "ipv4_300",
 		Value: "255.300.255.255",
+	}, {
+		Name:  "ipv4_leading_zero",
+		Value: "009.009.009.009",
 	}}
 }
 

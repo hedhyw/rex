@@ -96,23 +96,7 @@ func (h HelperDialect) IP() dialect.Token {
 //
 // Example: 127.0.0.1.
 func (HelperDialect) IPv4() dialect.Token {
-	ipv4Octet := Group.Composite(
-		// One of 250-255 | 200-249 | 0-199.
-		Group.NonCaptured( // 250-255.
-			Common.Text("25"),
-			Chars.Range('0', '5'),
-		),
-		Group.NonCaptured( // 200-249.
-			Chars.Single('2'),
-			Chars.Range('0', '4'),
-			Chars.Digits(),
-		),
-		Group.NonCaptured( // 000-199.
-			Chars.Runes("01").Repeat().ZeroOrOne(),
-			Chars.Digits(),
-			Chars.Digits().Repeat().ZeroOrOne(),
-		),
-	)
+	ipv4Octet := Helper.NumberRange(0, 255)
 
 	return Group.NonCaptured(
 		Group.NonCaptured(

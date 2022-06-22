@@ -38,17 +38,19 @@ func Example_basicUsage() {
 		// ID should begin with lowercased character.
 		rex.Chars.Lower().Repeat().OneOrMore(), // `[a-z]+`
 		// ID should contain number inside brackets [#].
-		rex.Chars.Single('['),                   // `[`
-		rex.Chars.Digits().Repeat().OneOrMore(), // `[0-9]+`
-		rex.Chars.Single(']'),                   // `]`
-		rex.Chars.End(),                         // `$`
+		rex.Group.NonCaptured(
+			rex.Chars.Single('['),                   // `[`
+			rex.Chars.Digits().Repeat().OneOrMore(), // `[0-9]+`
+			rex.Chars.Single(']'),                   // `]`
+		),
+		rex.Chars.End(), // `$`
 	).MustCompile()
 
 	fmt.Println("re.String():", re.String())
 	fmt.Println("MatchString(\"abc[0]\"):", re.MatchString("abc[0]"))
 	fmt.Println("MatchString(\"abc0\"):", re.MatchString("abc0"))
 	// Output:
-	// re.String(): ^[[:lower:]]+\[\d+\]$
+	// re.String(): ^[[:lower:]]+(?:\[\d+\])$
 	// MatchString("abc[0]"): true
 	// MatchString("abc0"): false
 }
@@ -123,6 +125,30 @@ func Example_emailRawSecond() {
 	// regular expression: ^[a-zA-Z\d]+@[a-zA-Z\d]+\.[a-zA-Z\d]{2,3}$
 	// rex@example.com: true
 	// rexexample.com: false
+}
+
+func Example_emailRawThird() {
+	re := rex.New(
+		rex.Common.Raw(`^`),
+		rex.Helper.NumberRange(-111, 1111),
+		rex.Common.Raw(`\.[0-9]{2}$`),
+	).MustCompile()
+
+	fmt.Println("regular expression:", re.String())
+	fmt.Println("10.99:", re.MatchString("10.99"))
+	fmt.Println("1111.99:", re.MatchString("1111.99"))
+	fmt.Println("-111.99:", re.MatchString("-111.99"))
+	fmt.Println("-112.00:", re.MatchString("-112.00"))
+	fmt.Println("10.999:", re.MatchString("10.999"))
+	fmt.Println("111:", re.MatchString("111"))
+	// Output:
+	// regular expression: ^((?:\x2D(?:0|(?:[1-9])|(?:[1-9][0-9])|(?:10[0-9])|(?:11[0-1])))|(?:0|(?:[1-9])|(?:[1-9][0-9])|(?:[1-9][0-9][0-9])|(?:10[0-9][0-9])|(?:110[0-9])|(?:111[0-1])))\.[0-9]{2}$
+	// 10.99: true
+	// 1111.99: true
+	// -111.99: true
+	// -112.00: false
+	// 10.999: false
+	// 111: false
 }
 
 func Example_unicode() {
@@ -390,8 +416,31 @@ func Example_ipv4Match() {
 	fmt.Println("github.com:", re.MatchString("github.com"))
 
 	// Output:
-	// regular expression: ^(?:(?:((?:25[0-5])|(?:2[0-4]\d)|(?:[01]?\d\d?))\.){3}((?:25[0-5])|(?:2[0-4]\d)|(?:[01]?\d\d?)))$
+	// regular expression: ^(?:(?:(?:0|(?:[1-9])|(?:[1-9][0-9])|(?:1[0-9][0-9])|(?:2[0-4][0-9])|(?:25[0-5]))\.){3}(?:0|(?:[1-9])|(?:[1-9][0-9])|(?:1[0-9][0-9])|(?:2[0-4][0-9])|(?:25[0-5])))$
 	// 127.0.0.1: true
 	// 172.217.16.14: true
 	// github.com: false
+}
+
+func Example_numberRange() {
+	re := rex.New(
+		rex.Chars.Begin(),
+		rex.Helper.NumberRange(-1, 123),
+		rex.Chars.End(),
+	).MustCompile()
+
+	fmt.Println("regular expression:", re.String())
+	fmt.Println("9:", re.MatchString("9"))
+	fmt.Println("100:", re.MatchString("100"))
+	fmt.Println("-1:", re.MatchString("-1"))
+	fmt.Println("-2:", re.MatchString("-2"))
+	fmt.Println("124:", re.MatchString("124"))
+
+	// Output:
+	// regular expression: ^((?:\x2D(?:0|1))|(?:0|(?:[1-9])|(?:[1-9][0-9])|(?:1[0-1][0-9])|(?:12[0-3])))$
+	// 9: true
+	// 100: true
+	// -1: true
+	// -2: false
+	// 124: false
 }

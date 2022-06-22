@@ -11,29 +11,47 @@ This is a regular expressions builder for gophers!
 
 ## Why?
 
-It makes readability better and helps to construct regular expressions using human-friendly constructions. Also, it allows commenting and reusing blocks, which improves the quality of code.
+It makes readability better and helps to construct regular expressions using human-friendly constructions. Also, it allows commenting and reusing blocks, which improves the quality of code. It provides a convenient way to use parameterized patterns. It is easy to implement custom patterns or use a combination of others.
 
 It is just a builder, so it returns standart [`*regexp.Regexp`](https://pkg.go.dev/regexp#Regexp).
 
 The library supports [groups](#groups), [composits](#simple-composite), [classes](#character-classes), [flags](#flags), [repetitions](#repetitions) and if you want you can even use [raw regular expressions](#raw-regular-expression) in any place. Also it contains a set of [predefined helpers](#helper) for matching phones, emails, etc...
 
-Let's see an example of validating (`some_id[#]`):
+Let's see an example of validating or matching `some_id[#]` using verbose patterns:
 ```golang
-// Using this builder.
 re := rex.New(
     rex.Chars.Begin(), // `^`
     // ID should begin with lowercased character.
     rex.Chars.Lower().Repeat().OneOrMore(), // `[a-z]+`
     // ID should contain number inside brackets [#].
-    rex.Chars.Single('['),                   // `[`
-    rex.Chars.Digits().Repeat().OneOrMore(), // `[0-9]+`
-    rex.Chars.Single(']'),                   // `]`
-    rex.Chars.End(),                         // `$`
+    rex.Group.NonCaptured( // (?:)
+        rex.Chars.Single('['),                   // `[`
+        rex.Chars.Digits().Repeat().OneOrMore(), // `[0-9]+`
+        rex.Chars.Single(']'),                   // `]`
+    ),
+    rex.Chars.End(), // `$`
 ).MustCompile()
 ```
 
 Yes, it requires more code, but it has its advantages.
 > More, but simpler code, fewer bugs.
+
+You can still use original regular expressions. Example of matching
+numbers between `-111.99` and `1111.99` using a combination of patterns
+and raw regular expression:
+
+```golang
+re := rex.New(
+    rex.Common.Raw(`^`),
+    rex.Helper.NumberRange(-111, 1111),
+    rex.Common.Raw(`\.[0-9]{2}$`),
+).MustCompile()
+
+// Produces:
+// ^((?:\x2D(?:0|(?:[1-9])|(?:[1-9][0-9])|(?:10[0-9])|(?:11[0-1])))|(?:0|(?:[1-9])|(?:[1-9][0-9])|(?:[1-9][0-9][0-9])|(?:10[0-9][0-9])|(?:110[0-9])|(?:111[0-1])))\.[0-9]{2}$
+```
+
+
 
 ## Meme
 
@@ -150,6 +168,7 @@ Common regular expression patters that are ready to use.
 > ⚠️ These patterns are likely to be changed in new versions.
 
 ```golang
+rex.Helper.NumberRange(-5, 123) // Defines number range pattern without leading zeros.
 rex.Helper.Phone() // Combines PhoneE164 and PhoneE123.
 rex.Helper.PhoneE164() // +155555555
 rex.Helper.PhoneE123() // Combines PhoneNationalE123 and PhoneInternationalE123.
@@ -159,7 +178,7 @@ rex.Helper.HostnameRFC952() // Hostname by RFC-952 (stricter).
 rex.Helper.HostnameRFC1123() // Hostname by RFC-1123.
 rex.Helper.Email() // Unquoted email pattern, it doesn't check RFC 5322 completely, due to high complexity.
 rex.Helper.IP()   // IPv4 or IPv6.
-rex.Helper.IPv4() // 127.0.0.1
+rex.Helper.IPv4() // 127.0.0.1 (without leading zeros)
 rex.Helper.IPv6() // 2001:0db8:85a3:0000:0000:8a2e:0370:7334
 rex.Helper.MD5Hex() // d41d8cd98f00b204e9800998ecf8427e
 rex.Helper.SHA1Hex() // da39a3ee5e6b4b0d3255bfef95601890afd80709

@@ -131,7 +131,13 @@ func Example_emailRawThird() {
 	re := rex.New(
 		rex.Common.Raw(`^`),
 		rex.Helper.NumberRange(-111, 1111),
-		rex.Common.Raw(`\.[0-9]{2}$`),
+		rex.Common.RawVerbose(`
+			# RawVerbose is a synonym to Raw,
+			# but ignores comments, spaces and new lines.
+			\.        # Decimal delimter.  
+			[0-9]{2}  # Only two digits.
+			$         # The end.
+		`),
 	).MustCompile()
 
 	fmt.Println("regular expression:", re.String())

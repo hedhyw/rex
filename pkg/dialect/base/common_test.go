@@ -22,6 +22,10 @@ func TestRexCommon(t *testing.T) {
 		Chain:    []dialect.Token{base.Common.Raw(`^[A-Z]+$`)},
 		Expected: `^[A-Z]+$`,
 	}, {
+		Name:     "RawNotVerbose",
+		Chain:    []dialect.Token{base.Common.Raw(`.+$ # not_comment`)},
+		Expected: `.+$ # not_comment`,
+	}, {
 		Name:     "Text",
 		Chain:    []dialect.Token{base.Common.Text(`hello world`)},
 		Expected: `hello world`,

@@ -142,6 +142,13 @@ func (CharsBaseDialect) End() ClassToken {
 	return newClassToken(helper.ByteToken('$')).withoutBrackets()
 }
 
+// End of text (even if the flag EnableMultiline is set).
+//
+// Regex: `\z`.
+func (CharsBaseDialect) EndOfText() ClassToken {
+	return newClassToken(helper.StringToken(`\z`)).withoutBrackets()
+}
+
 // A word boundary for ACII words. Following positions count as word boundaries:
 //   - Beginning of string: If the first character is an ASCII word character.
 //   - End of string: If the last character is an ASCII word character.
@@ -150,6 +157,14 @@ func (CharsBaseDialect) End() ClassToken {
 // Regex: `\b`.
 func (CharsBaseDialect) ASCIIWordBoundary() ClassToken {
 	return newClassToken(helper.StringToken(`\b`)).withoutBrackets()
+}
+
+// A non-word boundary:
+// A position between two word characters or two non-word characters.
+//
+// Regex: `\B`.
+func (CharsBaseDialect) NotASCIIWordBoundary() ClassToken {
+	return newClassToken(helper.StringToken(`\B`)).withoutBrackets()
 }
 
 // Any character, possibly including newline if the flag AnyIncludeNewLine() is set.

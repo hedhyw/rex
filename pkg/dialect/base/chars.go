@@ -128,11 +128,43 @@ func (CharsBaseDialect) Begin() ClassToken {
 	return newClassToken(helper.ByteToken('^')).withoutBrackets()
 }
 
+// Begin of text (even if the flag EnableMultiline is set)
+//
+// Regex: `\A`.
+func (CharsBaseDialect) BeginOfText() ClassToken {
+	return newClassToken(helper.StringToken(`\A`)).withoutBrackets()
+}
+
 // End of text or line if the flag EnableMultiline is set.
 //
 // Regex: `$`.
 func (CharsBaseDialect) End() ClassToken {
 	return newClassToken(helper.ByteToken('$')).withoutBrackets()
+}
+
+// End of text (even if the flag EnableMultiline is set).
+//
+// Regex: `\z`.
+func (CharsBaseDialect) EndOfText() ClassToken {
+	return newClassToken(helper.StringToken(`\z`)).withoutBrackets()
+}
+
+// A word boundary for ACII words. Following positions count as word boundaries:
+//   - Beginning of string: If the first character is an ASCII word character.
+//   - End of string: If the last character is an ASCII word character.
+//   - Between a word and a non-word character.
+//
+// Regex: `\b`.
+func (CharsBaseDialect) ASCIIWordBoundary() ClassToken {
+	return newClassToken(helper.StringToken(`\b`)).withoutBrackets()
+}
+
+// A non-word boundary:
+// A position between two word characters or two non-word characters.
+//
+// Regex: `\B`.
+func (CharsBaseDialect) NotASCIIWordBoundary() ClassToken {
+	return newClassToken(helper.StringToken(`\B`)).withoutBrackets()
 }
 
 // Any character, possibly including newline if the flag AnyIncludeNewLine() is set.
@@ -146,8 +178,9 @@ func (CharsBaseDialect) Any() ClassToken {
 // It is safe to pass unicode characters.
 //
 // Example usage:
-//   Runes("a") // == Chars.Single('a')
-//   Runes("ab") // == Common.Class(Chars.Single('a'), Chars.Single('b'))
+//
+//	Runes("a") // == Chars.Single('a')
+//	Runes("ab") // == Common.Class(Chars.Single('a'), Chars.Single('b'))
 //
 // Regex: `[abc]`.
 func (CharsBaseDialect) Runes(val string) ClassToken {
@@ -204,7 +237,7 @@ func (CharsBaseDialect) Single(r rune) ClassToken {
 //
 // Example usage:
 //
-//   Chars.Unicode(unicode.Greek)
+//	Chars.Unicode(unicode.Greek)
 //
 // Regex: `\p{Greek}`.
 func (d CharsBaseDialect) Unicode(table *unicode.RangeTable) ClassToken {
@@ -230,7 +263,7 @@ func (d CharsBaseDialect) Unicode(table *unicode.RangeTable) ClassToken {
 //
 // Example usage:
 //
-//   Chars.UnicodeByName("Greek")
+//	Chars.UnicodeByName("Greek")
 //
 // Regex: `\p{Greek}`.
 func (CharsBaseDialect) UnicodeByName(name string) ClassToken {

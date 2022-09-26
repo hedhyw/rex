@@ -79,9 +79,17 @@ func TestRexChars_base(t *testing.T) {
 		Chain:    []dialect.Token{base.Chars.Begin()},
 		Expected: `^`,
 	}, {
+		Name:     "beginOfText",
+		Chain:    []dialect.Token{base.Chars.BeginOfText()},
+		Expected: `\A`,
+	}, {
 		Name:     "end",
 		Chain:    []dialect.Token{base.Chars.End()},
 		Expected: `$`,
+	}, {
+		Name:     "ASCIIWordBoundary",
+		Chain:    []dialect.Token{base.Chars.ASCIIWordBoundary()},
+		Expected: `\b`,
 	}, {
 		Name:     "single",
 		Chain:    []dialect.Token{base.Chars.Single('a')},

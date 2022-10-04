@@ -16,9 +16,6 @@
     "goimports": {
       "local-prefixes": "github.com/hedhyw/rex/"
     },
-    "nolintlint": {
-      "allow-leading-space": false
-    },
     "revive": {}
   }
 }

@@ -8,7 +8,8 @@
       "thelper",
       "paralleltest",
       "ireturn",
-      "gomnd"
+      "gomnd",
+      "nolintlint"
     ]
   },
   "linters-settings": {

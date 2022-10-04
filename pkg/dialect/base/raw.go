@@ -40,9 +40,12 @@ func (rt RawToken) WriteTo(w dialect.StringByteWriter) (n int, err error) {
 // backslash '\#' or it is not in the character class '[#]'.
 //
 // This input:
-//   .+\#[#] # comment
+//
+//	.+\#[#] # comment
+//
 // Will be converted to:
-//   .+\#[#]
+//
+//	.+\#[#]
 func removeComment(val string) string {
 	var (
 		backslash      bool

@@ -54,10 +54,10 @@ func (HelperDialect) HostnameRFC1123() dialect.Token {
 // Hostname is validated considering RFC-1123.
 //
 // Localpart is unquoted, and may use any of these ASCII characters:
-// - uppercase and lowercase Latin letters A to Z and a to z, digits 0 to 9
-// - printable characters !#$%&'*+-/=?^_`{|}~
-// - dot ., provided that it is not the first or last character and provided
-//   also that it does not appear consecutively (e.g., John..Doe@example.com is not allowed).
+//   - uppercase and lowercase Latin letters A to Z and a to z, digits 0 to 9
+//   - printable characters !#$%&'*+-/=?^_`{|}~
+//   - dot ., provided that it is not the first or last character and provided
+//     also that it does not appear consecutively (e.g., John..Doe@example.com is not allowed).
 func (h HelperDialect) Email() dialect.Token {
 	localCharsWithoutDot := Common.Class(
 		Chars.Alphanumeric(),

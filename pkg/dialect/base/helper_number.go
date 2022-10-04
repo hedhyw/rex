@@ -22,10 +22,10 @@ type NumberRange struct {
 //
 // It doesn't match leading zeros. If you want to match them, use:
 //
-//   Group.NonCaptured(
-//     Chars.Single('0').Repeat().ZeroOrMore(),
-//     Helper.NumberRange(0, 99),
-//   )
+//	Group.NonCaptured(
+//	  Chars.Single('0').Repeat().ZeroOrMore(),
+//	  Helper.NumberRange(0, 99),
+//	)
 func (h HelperDialect) NumberRange(from int32, to int32) NumberRange {
 	return NumberRange{
 		initialFrom: int64(from),

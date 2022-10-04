@@ -1,4 +1,4 @@
-// nolint: lll // Generated regular expression can be long.
+// nolint: lll,nosnakecase // Generated regular expression can be long.
 package rex_test
 
 import (
@@ -12,7 +12,7 @@ import (
 func Example_basicMethods() {
 	rexRe := rex.New(rex.Chars.Any().Repeat().ZeroOrMore())
 
-	// Use Compile if you spcify dynamic arguments.
+	// Use Compile if you specify dynamic arguments.
 	re, err := rexRe.Compile()
 	if err != nil {
 		log.Fatal(err)
@@ -20,7 +20,7 @@ func Example_basicMethods() {
 
 	fmt.Println(`re.MatchString("a"):`, re.MatchString("a"))
 
-	// Use MustCompile if you don't speicfy dynamic arguments.
+	// Use MustCompile if you don't specify dynamic arguments.
 	re = rexRe.MustCompile()
 	fmt.Println(`re.MatchString("a"):`, re.MatchString("a"))
 

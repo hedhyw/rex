@@ -8,12 +8,16 @@
       "thelper",
       "paralleltest",
       "ireturn",
-      "gomnd"
+      "gomnd",
+      "nolintlint"
     ]
   },
   "linters-settings": {
     "goimports": {
       "local-prefixes": "github.com/hedhyw/rex/"
+    },
+    "nolintlint": {
+      "allow-leading-space": false
     },
     "revive": {}
   }

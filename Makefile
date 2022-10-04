@@ -1,4 +1,4 @@
-GOLANG_CI_LINT_VER:=v1.46.2
+GOLANG_CI_LINT_VER:=v1.50.0
 COVER_PACKAGES=${shell go list ./... | grep -Ev 'test' | tr '\n' ','}
 
 all: lint test

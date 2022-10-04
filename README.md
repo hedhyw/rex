@@ -12,7 +12,7 @@
 - **[Why?](#why)**
 - **[FAQ](#faq)**
 - **[Documentation](_docs/library.md)**
-- **[Examples](pkg/examples_test.go)**
+- **[Examples](pkg/rex/examples_test.go)**
 - **[License](#license)**
 
 ## Why?

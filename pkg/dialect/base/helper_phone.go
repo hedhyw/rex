@@ -7,9 +7,10 @@ import (
 // Phone contains composite of different phone patterns: E.164, E.123.
 //
 // Examples:
-//   +15555555
-//   (607) 123 4567
-//   +22 607 123 4567
+//
+//	+15555555
+//	(607) 123 4567
+//	+22 607 123 4567
 func (h HelperDialect) Phone() dialect.Token {
 	return Group.Composite(
 		h.PhoneE164(),
@@ -43,8 +44,9 @@ func (HelperDialect) PhoneE164() dialect.Token {
 // It combines international and national formats.
 //
 // Examples:
-//   (607) 123 4567
-//   +22 607 123 4567
+//
+//	(607) 123 4567
+//	+22 607 123 4567
 func (h HelperDialect) PhoneE123() dialect.Token {
 	return Group.Composite(
 		h.PhoneNationalE123(),

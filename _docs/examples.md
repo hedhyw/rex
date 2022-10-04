@@ -79,4 +79,4 @@ submatches := re.FindAllStringSubmatch(text, -1)
 
 #### More examples
 
-More examples can be found here: [examples_test.go](examples_test.go).
+More examples can be found here: [examples_test.go](../pkg/rex/examples_test.go).

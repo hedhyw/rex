@@ -127,7 +127,7 @@ func Example_emailRawSecond() {
 	// rexexample.com: false
 }
 
-func Example_emailRawThird() {
+func Example_numberRangeRawVerbose() {
 	re := rex.New(
 		rex.Common.Raw(`^`),
 		rex.Helper.NumberRange(-111, 1111),

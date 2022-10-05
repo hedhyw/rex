@@ -28,7 +28,7 @@ func ByteToken(val byte) dialect.Token {
 	})
 }
 
-// ProcessTokens goes trough all tokens and call WriteTo method.
+// ProcessTokens goes through all tokens and call WriteTo method.
 func ProcessTokens(w dialect.StringByteWriter, tokens []dialect.Token) (int, error) {
 	var totalWritten int
 

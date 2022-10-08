@@ -29,7 +29,11 @@ Single characters and classes, that can be used as-is, as well as childs to `rex
 
 ```golang
 rex.Chars.Begin()                // `^`
+rex.Chars.BeginOfText()          // `\A`
 rex.Chars.End()                  // `$`
+rex.Chars.EndOfText()            // `\z`
+rex.Chars.ASCIIWordBoundary()    // `\b`
+rex.Chars.NotASCIIWordBoundary() // `\B`
 rex.Chars.Any()                  // `.`
 rex.Chars.Range('a', 'z')        // `[a-z]`
 rex.Chars.Runes("abc")           // `[abc]`

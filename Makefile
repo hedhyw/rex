@@ -1,5 +1,5 @@
 GOLANG_CI_LINT_VER:=v1.50.0
-COVER_PACKAGES=${shell go list ./... | grep -Ev 'test' | tr '\n' ','}
+COVER_PACKAGES=${shell go list ./... | grep -Ev 'test|generator' | tr '\n' ','}
 
 all: lint test
 .PHONY: all
@@ -32,3 +32,6 @@ bin/golangci-lint:
 		-sSfL \
 		https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
 		| sh -s $(GOLANG_CI_LINT_VER)
+
+build:
+	go build -o ./bin/generate/rex ./cmd/generator/main.go

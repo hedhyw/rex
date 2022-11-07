@@ -1,78 +1,29 @@
 package main
 
 import (
+	"log"
 	"os"
+
+	"github.com/hedhyw/rex/internal/generator"
 )
 
 func main() {
-	argsWithProg := os.Args
+	args := os.Args
 
-	if len(argsWithProg) != 2 {
-		panic("Wrong amount of arguments!")
+	if len(args) != 2 {
+		log.Fatalln("wrong amount of arguments")
 	}
 
-	if len(argsWithProg[1]) == 0 {
-		panic("Given regex is empty!")
+	if len(args[1]) == 0 {
+		log.Fatalln("given regex is empty")
 	}
 
-	regex := argsWithProg[1]
+	regex := args[1]
 
-	_, err := os.Stdout.WriteString((generateCode(regex) + "\n"))
+	result, err := generator.GenerateCode(regex)
 	if err != nil {
-		panic("Error writing to stdout")
-	}
-}
-
-func generateCode(regex string) string {
-	afterLastBrace, beforeCurrentBrace, indentations, result := regex, "", "", "rex.New(\n"
-
-	currentOpenBraceIndex, bracesCounter := 0, 0
-
-	for index, runeValue := range regex {
-		if runeValue == '(' {
-			bracesCounter++
-
-			afterLastBrace = ""
-			beforeCurrentBrace = regex[currentOpenBraceIndex:index]
-
-			if len(beforeCurrentBrace) != 0 {
-				indentations += "\t"
-				result = result + indentations + "rex.Common.Raw(`" + beforeCurrentBrace + "`),\n"
-				indentations = indentations[:(len(indentations) - 1)]
-			}
-
-			indentations += "\t"
-			result += indentations + "rex.Group.Define(\n"
-			currentOpenBraceIndex = index + 1
-		}
-
-		if runeValue == ')' {
-			bracesCounter--
-
-			beforeCurrentBrace = regex[currentOpenBraceIndex:index]
-			if len(beforeCurrentBrace) != 0 {
-				indentations += "\t"
-				result = result + indentations + "rex.Common.Raw(`" + beforeCurrentBrace + "`),\n"
-				indentations = indentations[:(len(indentations) - 1)]
-			}
-
-			if index < len(regex)-1 && bracesCounter == 0 {
-				afterLastBrace = regex[(index + 1):]
-			}
-
-			result += indentations + "),\n"
-			indentations = indentations[:(len(indentations) - 1)]
-			currentOpenBraceIndex = index + 1
-		}
+		log.Fatal(err)
 	}
 
-	if bracesCounter != 0 {
-		panic("Braces aren't mached!")
-	}
-
-	if len(afterLastBrace) != 0 {
-		result += "	rex.Common.Raw(`" + afterLastBrace + "`),\n"
-	}
-
-	return result + ")"
+	os.Stdout.WriteString(result + "\n")
 }

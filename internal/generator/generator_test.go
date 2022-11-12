@@ -1,7 +1,6 @@
 package generator_test
 
 import (
-	"log"
 	"testing"
 
 	"github.com/hedhyw/rex/internal/generator"
@@ -13,86 +12,108 @@ type generatorTestCase struct {
 	result string
 }
 
-func TestGenerateCode(t *testing.T) {
+func TestGenerateCodeOK(t *testing.T) {
 	t.Parallel()
 
-	var actual, expected, givenRegex string
+	testCases := getSuccessGroupTestCases()
 
-	var err error
-
-	tests := getGroupTestCases()
-	for _, testCaseNotInParallel := range tests {
+	for _, testCaseNotInParallel := range testCases {
 		testCase := testCaseNotInParallel
-		expected = testCase.result
-		givenRegex = testCase.regex
+
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
-			actual, err = generator.GenerateCode(givenRegex)
+
+			actual, err := generator.GenerateCode(testCase.regex)
 			if err != nil {
-				log.Fatal(err)
+				t.Fatal(err)
 			}
-			if actual != expected {
-				t.Errorf("Expected:\n %s, \nGot:\n %s", expected, actual)
+
+			if actual != testCase.result {
+				t.Errorf("Expected:\n%s\nGot:\n%s", testCase.result, actual)
 			}
 		})
 	}
 }
 
-func getGroupTestCases() []generatorTestCase {
-	return []generatorTestCase{
-		{
-			name: "one letter regex", regex: "a",
-			result: "rex.New(\n" +
-				"	rex.Common.Raw(`a`),\n" +
-				")",
-		},
-		{
-			name: "simple regex", regex: "a((\\d+)([a-z]+\\()))",
-			result: "rex.New(\n" +
-				"	rex.Common.Raw(`a`),\n" +
-				"	rex.Group.Define(\n" +
-				"		rex.Group.Define(\n" +
-				"			rex.Common.Raw(`\\d+`),\n" +
-				"		),\n" +
-				"		rex.Group.Define(\n" +
-				"			rex.Common.Raw(`[a-z]+\\(`),\n" +
-				"		),\n" +
-				"	),\n" +
-				")",
-		},
-		{
-			name: "long regex",
-			regex: "((\\d+)([a-z]+))a((\\d+)([a-z]+))a" +
-				"((\\d+)([a-z]+))a",
-			result: "rex.New(\n" +
-				"	rex.Group.Define(\n" +
-				"		rex.Group.Define(\n" +
-				"			rex.Common.Raw(`\\d+`),\n" +
-				"		),\n" +
-				"		rex.Group.Define(\n" +
-				"			rex.Common.Raw(`[a-z]+`),\n" +
-				"		),\n" +
-				"	),\n" +
-				"	rex.Common.Raw(`a`),\n" +
-				"	rex.Group.Define(\n" +
-				"		rex.Group.Define(\n" +
-				"			rex.Common.Raw(`\\d+`),\n" +
-				"		),\n" +
-				"		rex.Group.Define(\n" +
-				"			rex.Common.Raw(`[a-z]+`),\n" +
-				"		),\n" +
-				"	),\n" +
-				"	rex.Common.Raw(`a`),\n" +
-				"	rex.Group.Define(\n" +
-				"		rex.Group.Define(\n" +
-				"			rex.Common.Raw(`\\d+`),\n" +
-				"		),\n" +
-				"		rex.Group.Define(\n" +
-				"			rex.Common.Raw(`[a-z]+`),\n" +
-				"		),\n" +
-				"	),\n" +
-				"	rex.Common.Raw(`a`),\n" +
-				")",
-		},
+func TestGenerateCodeInvalidRegexpr(t *testing.T) {
+	t.Parallel()
+
+	_, err := generator.GenerateCode("(")
+	if err == nil {
+		t.Fatal(err)
 	}
+}
+
+// nolint: funlen // test cases.
+func getSuccessGroupTestCases() []generatorTestCase {
+	return []generatorTestCase{{
+		name:  "one_letter_regex",
+		regex: `a`,
+		result: "rex.New(\n" +
+			"	rex.Common.Raw(`a`),\n" +
+			")",
+	}, {
+		name:  "uncaptured",
+		regex: `(?P<name>1234)`,
+		result: "rex.New(\n" +
+			"	rex.Group.Define(\n" +
+			"		rex.Common.Raw(`1234`),\n" +
+			"	).WithName(\"name\"),\n" +
+			")",
+	}, {
+		name:  "concat",
+		regex: `(1|12|123)`,
+		result: "rex.New(\n" +
+			"	rex.Group.Define(\n" +
+			"		rex.Common.Raw(`1(?:)|2(?:(?:)|3)`),\n" +
+			"	),\n" +
+			")",
+	}, {
+		name:  "simple regex",
+		regex: `a((\d+)([a-z]+\())`,
+		result: "rex.New(\n" +
+			"	rex.Common.Raw(`a`),\n" +
+			"	rex.Group.Define(\n" +
+			"		rex.Group.Define(\n" +
+			"			rex.Common.Raw(`[0-9]+`),\n" +
+			"		),\n" +
+			"		rex.Group.Define(\n" +
+			"			rex.Common.Raw(`[a-z]+\\(`),\n" +
+			"		),\n" +
+			"	),\n" +
+			")",
+	}, {
+		name: "long_regex",
+		regex: "(([0-9]+)([a-z]+))a(([0-9]+)([a-z]+))a" +
+			"(([0-9]+)([a-z]+))a",
+		result: "rex.New(\n" +
+			"	rex.Group.Define(\n" +
+			"		rex.Group.Define(\n" +
+			"			rex.Common.Raw(`[0-9]+`),\n" +
+			"		),\n" +
+			"		rex.Group.Define(\n" +
+			"			rex.Common.Raw(`[a-z]+`),\n" +
+			"		),\n" +
+			"	),\n" +
+			"	rex.Common.Raw(`a`),\n" +
+			"	rex.Group.Define(\n" +
+			"		rex.Group.Define(\n" +
+			"			rex.Common.Raw(`[0-9]+`),\n" +
+			"		),\n" +
+			"		rex.Group.Define(\n" +
+			"			rex.Common.Raw(`[a-z]+`),\n" +
+			"		),\n" +
+			"	),\n" +
+			"	rex.Common.Raw(`a`),\n" +
+			"	rex.Group.Define(\n" +
+			"		rex.Group.Define(\n" +
+			"			rex.Common.Raw(`[0-9]+`),\n" +
+			"		),\n" +
+			"		rex.Group.Define(\n" +
+			"			rex.Common.Raw(`[a-z]+`),\n" +
+			"		),\n" +
+			"	),\n" +
+			"	rex.Common.Raw(`a`),\n" +
+			")",
+	}}
 }

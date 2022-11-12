@@ -120,7 +120,7 @@ re := rex.New(
    - `rex.Common` helpers can be deprecated, but not removed.
    - `rex.Group` some methods can be deprecated.
    - `rex.Helper` can be changed with breaking changes due to specification complexities.
-   - The test coverage should be `~100%` without covering [test helpers](internal/test/test.go).
+   - The test coverage should be `~100%` without covering [test helpers](internal/test/test.go) and [cmd](cmd).
    - Any breaking change will be prevented as much as possible.
 
    _All of the above may not be respected when upgrading the major version._

@@ -1,5 +1,5 @@
 GOLANG_CI_LINT_VER:=v1.50.0
-COVER_PACKAGES=${shell go list ./... | grep -Ev 'test|generator' | tr '\n' ','}
+COVER_PACKAGES=${shell go list ./... | grep -Ev 'test|cmd' | tr '\n' ','}
 
 all: lint test
 .PHONY: all
@@ -34,4 +34,4 @@ bin/golangci-lint:
 		| sh -s $(GOLANG_CI_LINT_VER)
 
 build:
-	go build -o ./bin/generate/rex ./cmd/generator/main.go
+	go build -o ./bin/rex ./cmd/generator/main.go

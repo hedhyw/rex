@@ -1,3 +1,4 @@
+// nolint: funlen // Unit tests.
 package base_test
 
 import (
@@ -21,21 +22,41 @@ func TestRexClassRepetitions(t *testing.T) {
 		Chain:    []dialect.Token{getABClass().Between(0, 1)},
 		Expected: `[ab]{0,1}`,
 	}, {
+		Name:     "BetweenPreferFewer",
+		Chain:    []dialect.Token{getABClass().BetweenPreferFewer(0, 1)},
+		Expected: `[ab]{0,1}?`,
+	}, {
 		Name:     "EqualOrMoreThan",
 		Chain:    []dialect.Token{getABClass().EqualOrMoreThan(5)},
 		Expected: `[ab]{5,}`,
+	}, {
+		Name:     "EqualOrMoreThanPreferFewer",
+		Chain:    []dialect.Token{getABClass().EqualOrMoreThanPreferFewer(5)},
+		Expected: `[ab]{5,}?`,
 	}, {
 		Name:     "OneOrMore",
 		Chain:    []dialect.Token{getABClass().OneOrMore()},
 		Expected: `[ab]+`,
 	}, {
-		Name:     "OneOrMore",
+		Name:     "OneOrMorePreferFewer",
+		Chain:    []dialect.Token{getABClass().OneOrMorePreferFewer()},
+		Expected: `[ab]+?`,
+	}, {
+		Name:     "ZeroOrMore",
 		Chain:    []dialect.Token{getABClass().ZeroOrMore()},
 		Expected: `[ab]*`,
+	}, {
+		Name:     "ZeroOrMorePreferFewer",
+		Chain:    []dialect.Token{getABClass().ZeroOrMorePreferFewer()},
+		Expected: `[ab]*?`,
 	}, {
 		Name:     "ZeroOrOne",
 		Chain:    []dialect.Token{getABClass().ZeroOrOne()},
 		Expected: `[ab]?`,
+	}, {
+		Name:     "ZeroOrOnePreferZero",
+		Chain:    []dialect.Token{getABClass().ZeroOrOnePreferZero()},
+		Expected: `[ab]??`,
 	}, {
 		Name:     "AnyOneOrMore",
 		Chain:    []dialect.Token{base.Chars.Any().Repeat().OneOrMore()},
@@ -44,6 +65,10 @@ func TestRexClassRepetitions(t *testing.T) {
 		Name:     "RangeOneOrMore",
 		Chain:    []dialect.Token{base.Chars.Range('0', '9').Repeat().OneOrMore()},
 		Expected: `[0-9]+`,
+	}, {
+		Name:     "RangeOneOrMorePreferFewer",
+		Chain:    []dialect.Token{base.Chars.Range('0', '9').Repeat().OneOrMorePreferFewer()},
+		Expected: `[0-9]+?`,
 	}, {
 		Name:     "Exactly",
 		Chain:    []dialect.Token{base.Chars.Range('0', '9').Repeat().Exactly(2)},

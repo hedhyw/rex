@@ -97,10 +97,15 @@ Helpers that specify how to repeat characters. They can be called on character c
 
 ```golang
 RepetableClassToken.Repeat().OneOrMore() // `+`
+RepetableClassToken.Repeat().OneOrMorePreferFewer() // `+?`
 RepetableClassToken.ZeroOrMore() // `*`
+RepetableClassToken.ZeroOrMorePreferFewer() // `*?`
 RepetableClassToken.ZeroOrOne() // `?`
+RepetableClassToken.ZeroOrOnePreferZero() // `??`
 RepetableClassToken.EqualOrMoreThan(n int) // `{n,}`
+RepetableClassToken.EqualOrMoreThanPreferFewer(n int) // `{n,}?`
 RepetableClassToken.Between(n, m int) // `{n,m}`
+RepetableClassToken.BetweenPreferFewer(n, m int) // `{n,m}?`
 
 // Example:
 rex.Chars.Digits().Repeat().OneOrMore() // [0-9]+

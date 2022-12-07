@@ -6,7 +6,7 @@ updates:
     schedule:
       interval: "monthly"
     commit-message:
-      prefix: "gha"
+      prefix: "chore(gha)"
     pull-request-branch-name:
       separator: "/"
 
@@ -15,6 +15,6 @@ updates:
     schedule:
       interval: "monthly"
     commit-message:
-      prefix: "gomod"
+      prefix: "chore(gomod)"
     pull-request-branch-name:
       separator: "/"

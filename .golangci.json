@@ -9,7 +9,19 @@
       "paralleltest",
       "ireturn",
       "gomnd",
-      "nolintlint"
+      "nolintlint",
+      "depguard",
+      "goconst",
+      "maligned",
+      "structcheck",
+      "varcheck",
+      "nosnakecase",
+      "interfacer",
+      "golint",
+      "scopelint",
+      "exhaustivestruct",
+      "ifshort",
+      "deadcode"
     ]
   },
   "linters-settings": {

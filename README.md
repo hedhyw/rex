@@ -115,15 +115,7 @@ re := rex.New(
 
 5. **Is it stable?**
 
-   It is `0.X.Y` version, but there are some backward compatibility guarantees:
-   - `rex.Chars` helpers can change output to an alternative synonym.
-   - `rex.Common` helpers can be deprecated, but not removed.
-   - `rex.Group` some methods can be deprecated.
-   - `rex.Helper` can be changed with breaking changes due to specification complexities.
-   - The test coverage should be `~100%` without covering [test helpers](internal/test/test.go) and [cmd](cmd).
-   - Any breaking change will be prevented as much as possible.
-
-   _All of the above may not be respected when upgrading the major version._
+   Yes, starting with version v1.0.0.
 
 6. **I have another question. I found an issue. I have a feature request. I want to contribute.**
 

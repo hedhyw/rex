@@ -12,16 +12,12 @@
       "nolintlint",
       "depguard",
       "goconst",
-      "maligned",
-      "structcheck",
-      "varcheck",
-      "nosnakecase",
-      "interfacer",
-      "golint",
-      "scopelint",
-      "exhaustivestruct",
-      "ifshort",
-      "deadcode"
+      "exportloopref",
+      "mnd",
+      "copyloopvar",
+      "execinquery",
+      "govet",
+      "intrange"
     ]
   },
   "linters-settings": {

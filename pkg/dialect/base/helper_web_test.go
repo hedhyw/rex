@@ -226,6 +226,7 @@ func FuzzIPv4(f *testing.F) {
 
 		expected := net.ParseIP(fuzzIP) != nil
 		actual := re.MatchString(fuzzIP)
+
 		if expected != actual {
 			t.Errorf("Actual: %v, Expected: %v", actual, expected)
 		}

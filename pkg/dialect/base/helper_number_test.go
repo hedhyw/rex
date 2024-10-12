@@ -16,6 +16,7 @@ func TestNumberRange_broot(t *testing.T) {
 
 	for i := -100; i < 100; i++ {
 		for j := i; j < 100; j++ {
+			// nolint: gosec // It's a test, and range is defined in the loop.
 			newNumberRangeTestCase(int32(i), int32(j)).Run(t, 100)
 		}
 	}

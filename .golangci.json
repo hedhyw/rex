@@ -1,29 +1,58 @@
 {
+  "formatters": {
+    "enable": [
+      "gci",
+      "gofmt",
+      "gofumpt",
+      "goimports"
+    ],
+    "exclusions": {
+      "generated": "lax",
+      "paths": [
+        "third_party$",
+        "builtin$",
+        "examples$"
+      ]
+    },
+    "settings": {
+      "goimports": {
+        "local-prefixes": [
+          "github.com/hedhyw/rex/"
+        ]
+      }
+    }
+  },
   "linters": {
-    "enable-all": true,
+    "default": "all",
     "disable": [
-      "nonamedreturns",
-      "wrapcheck",
-      "varnamelen",
-      "thelper",
-      "paralleltest",
-      "ireturn",
-      "gomnd",
-      "nolintlint",
+      "copyloopvar",
       "depguard",
       "goconst",
-      "exportloopref",
-      "mnd",
-      "copyloopvar",
-      "execinquery",
       "govet",
-      "intrange"
-    ]
+      "intrange",
+      "ireturn",
+      "mnd",
+      "nolintlint",
+      "nonamedreturns",
+      "paralleltest",
+      "thelper",
+      "varnamelen",
+      "wrapcheck"
+    ],
+    "exclusions": {
+      "generated": "lax",
+      "paths": [
+        "third_party$",
+        "builtin$",
+        "examples$"
+      ],
+      "presets": [
+        "comments",
+        "common-false-positives",
+        "legacy",
+        "std-error-handling"
+      ]
+    }
   },
-  "linters-settings": {
-    "goimports": {
-      "local-prefixes": "github.com/hedhyw/rex/"
-    },
-    "revive": {}
-  }
+  "version": "2"
 }

@@ -175,6 +175,7 @@ func TestRexChars_runes(t *testing.T) {
 	}, {
 		Name: "unicode",
 		Chain: []dialect.Token{
+			// nolint: gosmopolitan // A test.
 			base.Chars.Runes("ひヒ家"),
 		},
 		Expected: `[\x{3072}\x{30D2}\x{5BB6}]`,

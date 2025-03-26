@@ -1,4 +1,3 @@
-// nolint: goerr113 // Test error.
 package helper_test
 
 import (
@@ -117,6 +116,7 @@ func TestProcessTokensFailed(t *testing.T) {
 
 	_, err := helper.ProcessTokens(sb, []dialect.Token{
 		helper.TokenFunc(func(dialect.StringByteWriter) (int, error) {
+			// nolint: err113 // Test.
 			return 0, errors.New("failed")
 		}),
 	})

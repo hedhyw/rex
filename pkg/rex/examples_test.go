@@ -1,4 +1,4 @@
-// nolint: lll,nosnakecase // Generated regular expression can be long.
+// nolint: lll // Generated regular expression can be long.
 package rex_test
 
 import (
@@ -183,6 +183,7 @@ func Example_unicodeByName() {
 
 	fmt.Println("Hiragana: ひ", re.MatchString("ひ"))
 	fmt.Println("Katakana: ヒ", re.MatchString("ひ"))
+	// nolint: gosmopolitan // A test.
 	fmt.Println("Kanji: 家", re.MatchString("家"))
 	fmt.Println("Other: a", re.MatchString("a"))
 	// Output:

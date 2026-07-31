@@ -1,0 +1,30 @@
+# Rex
+
+> Rex is a zero-dependency Go library for building regular expressions from
+> human-friendly, composable tokens. It compiles to a standard Go
+> `*regexp.Regexp`, supports groups, character classes, repetitions, and raw
+> regex fragments, and ships predefined helpers for numbers ranges, phones,
+> emails, hostnames, IPs, and hashes.
+
+Key facts:
+
+- Module: `github.com/hedhyw/rex` (Go, MIT license, stable since v1.0.0).
+- Main import path: `github.com/hedhyw/rex/pkg/rex`.
+- Entry point: `rex.New(tokens...)` with namespaces `rex.Chars`,
+  `rex.Common`, `rex.Group`, `rex.Helper`; finish with `.MustCompile()`,
+  `.Compile()`, or `.String()`.
+- Token interfaces live in `github.com/hedhyw/rex/pkg/dialect`; the base
+  dialect implementation in `github.com/hedhyw/rex/pkg/dialect/base`.
+- `cmd/generator` is an unfinished experimental CLI for converting a
+  regular expression into rex builder code.
+
+## Docs
+
+- [README](https://github.com/hedhyw/rex/blob/main/README.md): overview,
+  motivation, examples, FAQ.
+- [Library documentation](https://github.com/hedhyw/rex/blob/main/_docs/library.md):
+  full API reference with produced regex for each token.
+- [AGENTS.md](https://github.com/hedhyw/rex/blob/main/AGENTS.md): guide for
+  AI coding agents — layout, build/test/lint commands, conventions.
+- [pkg.go.dev](https://pkg.go.dev/github.com/hedhyw/rex): generated Go API
+  documentation.

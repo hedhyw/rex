@@ -9,11 +9,41 @@
 
 **This is a regular expressions builder for gophers!**
 
+- **[Installation](#installation)**
+- **[Quick start](#quick-start)**
 - **[Why?](#why)**
 - **[FAQ](#faq)**
 - **[Documentation](_docs/library.md)**
 - **[Examples](pkg/rex/examples_test.go)**
 - **[License](#license)**
+
+## Installation
+
+```sh
+go get github.com/hedhyw/rex
+```
+
+## Quick start
+
+```golang
+package main
+
+import (
+	"fmt"
+
+	"github.com/hedhyw/rex/pkg/rex"
+)
+
+func main() {
+	re := rex.New(
+		rex.Chars.Begin(),                       // `^`
+		rex.Chars.Digits().Repeat().OneOrMore(), // `[0-9]+`
+		rex.Chars.End(),                         // `$`
+	).MustCompile() // Returns a standard *regexp.Regexp.
+
+	fmt.Println(re.MatchString("12345")) // true
+}
+```
 
 ## Why?
 

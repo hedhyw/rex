@@ -15,8 +15,8 @@ Key facts:
   `.Compile()`, or `.String()`.
 - Token interfaces live in `github.com/hedhyw/rex/pkg/dialect`; the base
   dialect implementation in `github.com/hedhyw/rex/pkg/dialect/base`.
-- `cmd/generator` is a CLI that converts a regular expression into rex
-  builder code.
+- `cmd/generator` is an unfinished experimental CLI for converting a
+  regular expression into rex builder code.
 
 ## Docs
 

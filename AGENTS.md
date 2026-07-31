@@ -54,8 +54,8 @@ Supporting packages (also public, but most users only need `pkg/rex`):
   and `helper_*.go` (number, phone, web, hash patterns) with tests.
 - `internal/helper/` — token stream processing used by `rex.New`.
 - `internal/generator/` — regex-to-rex-code generation logic.
-- `cmd/generator/` — CLI entry point: `rex '<regex>'` prints rex builder
-  code for a given regular expression.
+- `cmd/generator/` — CLI entry point for the experimental regex-to-rex
+  converter (unfinished; see Code generation below).
 - `_docs/` — `library.md` (API documentation), `examples.md`, images.
 - `bin/` — git-ignored; holds the downloaded golangci-lint and built CLI.
 
@@ -80,8 +80,14 @@ uploads coverage to Coveralls. PR titles must follow Conventional Commits
 
 There is no generated code in this repository; all source files are
 hand-written and may be edited. (`cmd/generator` / `internal/generator`
-are a user-facing tool for converting regexes to rex code, not part of
-the build.)
+are an unfinished experimental tool for converting regexes to rex code,
+not part of the build — do not rely on its output.)
+
+## Skills
+
+- `.claude/skills/regex-to-rex/` — Claude Code skill that converts a plain
+  regular expression into rex builder code via a verified manual mapping
+  table (do not use `cmd/generator` for this).
 
 ## Conventions
 
